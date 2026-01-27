@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+    <title>Lucas BOLES - Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -176,7 +176,30 @@
             font-size: 1.1rem;
             line-height: 1.9;
             color: var(--text);
+            margin-bottom: 2rem;
+        }
+
+        .hero-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
             margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .info-item strong {
+            color: var(--text);
         }
 
         .cta-button {
@@ -189,12 +212,68 @@
             border-radius: 50px;
             transition: all 0.3s ease;
             box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+            margin-right: 1rem;
         }
 
         .cta-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
             background: #ff5722;
+        }
+
+        .cta-button.secondary {
+            background: white;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .skill-category h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .skill-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .skill-level {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
         }
 
         /* Projects Grid */
@@ -258,6 +337,13 @@
             font-weight: 700;
             margin-bottom: 1rem;
             color: var(--primary);
+        }
+
+        .project-date {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .project-description {
@@ -445,6 +531,11 @@
             .projects-grid {
                 grid-template-columns: 1fr;
             }
+
+            .hero-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
 
         /* Scroll animations */
@@ -463,122 +554,231 @@
 <body>
     <nav>
         <ul>
-            <li><a href="#moi">Moi</a></li>
+            <li><a href="#moi">À propos</a></li>
             <li><a href="#projets">Mes Projets</a></li>
-            <li><a href="#projections">Projections</a></li>
-            <li><a href="#liens">Liens Utiles</a></li>
+            <li><a href="#projections">Objectifs</a></li>
+            <li><a href="#liens">Contact</a></li>
         </ul>
     </nav>
 
     <section id="moi">
         <div class="container hero-content">
-            <h1>Bonjour, je suis [Votre Nom]</h1>
-            <p class="hero-subtitle">Développeur créatif • Designer • Innovateur</p>
+            <h1>Lucas BOLES</h1>
+            <p class="hero-subtitle">Étudiant en Génie Électrique & Informatique Industrielle</p>
             <p class="hero-description">
-                Passionné par la création d'expériences numériques exceptionnelles, je transforme les idées en réalité 
-                avec du code élégant et un design réfléchi. Chaque projet est une opportunité d'innover et de repousser 
-                les limites du possible.
+                Passionné par l'automatisation industrielle et l'optimisation des systèmes, je développe mes compétences 
+                techniques à travers des projets concrets et des expériences variées. Mes stages au CEA et au CNRS m'ont 
+                permis de développer rigueur et professionnalisme, tandis que mes expériences en entreprise ont renforcé 
+                ma polyvalence et mon sens de l'adaptation.
             </p>
-            <a href="#projets" class="cta-button">Découvrir mes projets</a>
+            
+            <div class="hero-info">
+                <div class="info-item">📍 <strong>Crolles, Isère (38)</strong></div>
+                <div class="info-item">🎓 <strong>BUT GEII 2ème année</strong> - IUT1 Grenoble Alpes</div>
+                <div class="info-item">🎯 <strong>Parcours:</strong> Automatisme & Informatique Industrielle</div>
+                <div class="info-item">🚗 <strong>Permis B</strong></div>
+                <div class="info-item">🌍 <strong>Anglais C1</strong> (Certifié Bright Language 2025)</div>
+            </div>
+
+            <h2 style="margin-top: 2rem;">Compétences Techniques</h2>
+            <div class="skills-grid fade-in">
+                <div class="skill-category">
+                    <h3>💻 Programmation</h3>
+                    <div class="skill-item">
+                        <span>Python</span>
+                        <span class="skill-level">Bonne maîtrise</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>C</span>
+                        <span class="skill-level">Bonne maîtrise</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Arduino</span>
+                        <span class="skill-level">Bonne maîtrise</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Java</span>
+                        <span class="skill-level">En développement</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>ADA</span>
+                        <span class="skill-level">En apprentissage</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>⚙️ Automatisme</h3>
+                    <div class="skill-item">
+                        <span>Control Expert</span>
+                        <span class="skill-level">Bonne maîtrise</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Vijeo Designer</span>
+                        <span class="skill-level">IHM</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Automates Schneider</span>
+                        <span class="skill-level">Pratique</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Grafcet</span>
+                        <span class="skill-level">Maîtrisé</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>🛠️ Outils</h3>
+                    <div class="skill-item">
+                        <span>KiCad</span>
+                        <span class="skill-level">CAO Électronique</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Pack Office</span>
+                        <span class="skill-level">Bonne maîtrise</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Logiciels CAO</span>
+                        <span class="skill-level">Pratique</span>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>🎨 Passions</h3>
+                    <div class="skill-item">
+                        <span>Programmation de jeux</span>
+                        <span class="skill-level">Java, Python, C</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Sport</span>
+                        <span class="skill-level">Escalade 7A, Volley</span>
+                    </div>
+                    <div class="skill-item">
+                        <span>Plongée</span>
+                        <span class="skill-level">PADI Open Water</span>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#projets" class="cta-button">Voir mes projets</a>
+            <a href="mailto:boleslcc@gmail.com" class="cta-button secondary">Me contacter</a>
         </div>
     </section>
 
     <section id="projets">
         <div class="container">
-            <h2>Mes Projets</h2>
+            <h2>Mes Projets & Expériences</h2>
             <div class="projects-grid">
                 <div class="project-card fade-in">
-                    <div class="project-image">🚀</div>
+                    <div class="project-image">🚂</div>
                     <div class="project-content">
-                        <h3 class="project-title">Application Web Innovante</h3>
+                        <div class="project-date">Octobre 2025</div>
+                        <h3 class="project-title">Système Automatisé de Transport sur Rail</h3>
                         <p class="project-description">
-                            Une plateforme interactive développée avec les dernières technologies pour offrir une 
-                            expérience utilisateur exceptionnelle.
+                            Conception d'un système automatisé à deux chariots pour le transfert de paniers entre cuves 
+                            de traitement chimique. Analyse fonctionnelle, grafcets, gestion des alarmes et des variateurs. 
+                            Programmation sur automate Schneider (Control Expert) et IHM Vijeo Designer. Simulation et tests 
+                            sur banc d'essai.
                         </p>
                         <div class="project-tags">
-                            <span class="tag">React</span>
-                            <span class="tag">Node.js</span>
-                            <span class="tag">MongoDB</span>
+                            <span class="tag">Control Expert</span>
+                            <span class="tag">Vijeo Designer</span>
+                            <span class="tag">Grafcet</span>
+                            <span class="tag">Automate Schneider</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="project-card fade-in">
-                    <div class="project-image">🎨</div>
+                    <div class="project-image">🤖</div>
                     <div class="project-content">
-                        <h3 class="project-title">Portfolio Créatif</h3>
+                        <div class="project-date">2024 - 2025</div>
+                        <h3 class="project-title">Robot Suiveur de Ligne</h3>
                         <p class="project-description">
-                            Un site vitrine moderne et responsive qui met en valeur le travail créatif avec des 
-                            animations fluides et un design épuré.
+                            Suivi d'un cahier des charges complet pour la conception d'un robot autonome. Maîtrise de KiCad 
+                            pour la conception des circuits, utilisation des logiciels CAO, brasure, tests, programmation 
+                            embarquée et élaboration des dossiers techniques.
                         </p>
                         <div class="project-tags">
-                            <span class="tag">HTML/CSS</span>
-                            <span class="tag">JavaScript</span>
-                            <span class="tag">Animation</span>
+                            <span class="tag">KiCad</span>
+                            <span class="tag">Arduino</span>
+                            <span class="tag">C/C++</span>
+                            <span class="tag">Électronique</span>
+                            <span class="tag">CAO</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="project-card fade-in">
-                    <div class="project-image">📱</div>
+                    <div class="project-image">⚛️</div>
                     <div class="project-content">
-                        <h3 class="project-title">Application Mobile</h3>
+                        <div class="project-date">Août 2022</div>
+                        <h3 class="project-title">Stage CEA Grenoble</h3>
                         <p class="project-description">
-                            Application cross-platform performante avec une interface intuitive et des fonctionnalités 
-                            avancées pour améliorer la productivité.
+                            Participation aux divers services scientifiques (nucléaire, médical, biologique). Observation 
+                            de la sécurité et défense des informations. Travail en autonomie, participation à des sessions 
+                            de travail anglophones et attention aux détails.
                         </p>
                         <div class="project-tags">
-                            <span class="tag">React Native</span>
-                            <span class="tag">Firebase</span>
-                            <span class="tag">API REST</span>
+                            <span class="tag">Recherche scientifique</span>
+                            <span class="tag">Nucléaire</span>
+                            <span class="tag">Sécurité</span>
+                            <span class="tag">Anglais</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="project-card fade-in">
-                    <div class="project-image">💡</div>
+                    <div class="project-image">🧬</div>
                     <div class="project-content">
-                        <h3 class="project-title">Outil d'Automatisation</h3>
+                        <div class="project-date">Avril 2021</div>
+                        <h3 class="project-title">Stage CNRS Grenoble</h3>
                         <p class="project-description">
-                            Script intelligent qui automatise les tâches répétitives et optimise les workflows pour 
-                            gagner en efficacité.
+                            Culture de bactéries et de levures, extraction d'ADN. Initiation à la cristallographie. 
+                            Développement du professionnalisme, sens des responsabilités et minutie dans les manipulations 
+                            scientifiques.
                         </p>
                         <div class="project-tags">
+                            <span class="tag">Biologie</span>
+                            <span class="tag">Laboratoire</span>
+                            <span class="tag">Cristallographie</span>
+                            <span class="tag">ADN</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-image">💻</div>
+                    <div class="project-content">
+                        <div class="project-date">Personnel</div>
+                        <h3 class="project-title">Développement de Jeux Vidéo</h3>
+                        <p class="project-description">
+                            Création et mise en forme de jeux en Java, Python, Scratch et C. Projets personnels pour 
+                            améliorer mes compétences en programmation orientée objet, gestion d'événements et interfaces 
+                            graphiques.
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">Java</span>
                             <span class="tag">Python</span>
-                            <span class="tag">Automation</span>
-                            <span class="tag">API</span>
+                            <span class="tag">C</span>
+                            <span class="tag">Game Dev</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="project-card fade-in">
-                    <div class="project-image">🌐</div>
+                    <div class="project-image">🏭</div>
                     <div class="project-content">
-                        <h3 class="project-title">Site E-commerce</h3>
+                        <div class="project-date">Août 2024</div>
+                        <h3 class="project-title">Opérateur de Production - SDMR</h3>
                         <p class="project-description">
-                            Plateforme de vente en ligne complète avec gestion des paiements, inventaire et 
-                            expérience utilisateur optimisée.
+                            Travail sur machine, manutention, emballage, tri, contrôle qualité, gestion des non-conformités, 
+                            palettisation dans une société de distribution de produits alimentaires. Développement de la 
+                            capacité d'adaptation et du dynamisme.
                         </p>
                         <div class="project-tags">
-                            <span class="tag">Vue.js</span>
-                            <span class="tag">Stripe</span>
-                            <span class="tag">PostgreSQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">🔧</div>
-                    <div class="project-content">
-                        <h3 class="project-title">Dashboard Analytics</h3>
-                        <p class="project-description">
-                            Interface de visualisation de données en temps réel avec graphiques interactifs et 
-                            insights personnalisables.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">D3.js</span>
-                            <span class="tag">Chart.js</span>
-                            <span class="tag">WebSocket</span>
+                            <span class="tag">Production</span>
+                            <span class="tag">Qualité</span>
+                            <span class="tag">Polyvalence</span>
                         </div>
                     </div>
                 </div>
@@ -588,27 +788,16 @@
 
     <section id="projections">
         <div class="container">
-            <h2>Mes Projections</h2>
+            <h2>Mes Objectifs</h2>
             <div class="timeline">
                 <div class="timeline-item fade-in">
                     <div class="timeline-content">
-                        <div class="timeline-date">T1 2026</div>
-                        <h3 class="timeline-title">Lancement Startup Tech</h3>
+                        <div class="timeline-date">Mi-Avril 2026</div>
+                        <h3 class="timeline-title">Stage en Automatisation Industrielle</h3>
                         <p class="timeline-description">
-                            Créer ma propre startup dans le domaine de l'IA et du machine learning, avec un focus 
-                            sur les solutions innovantes pour les entreprises.
-                        </p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-date">T3 2026</div>
-                        <h3 class="timeline-title">Certification Cloud Architect</h3>
-                        <p class="timeline-description">
-                            Obtenir les certifications AWS et Azure pour approfondir mes compétences en 
-                            architecture cloud et infrastructure moderne.
+                            Recherche active d'un stage de 8 à 12 semaines en automatisation industrielle pour mettre en 
+                            pratique mes compétences en automates programmables, Control Expert et systèmes automatisés. 
+                            Souhait de contribuer à des projets concrets d'optimisation de production.
                         </p>
                     </div>
                     <div class="timeline-dot"></div>
@@ -617,10 +806,11 @@
                 <div class="timeline-item fade-in">
                     <div class="timeline-content">
                         <div class="timeline-date">2027</div>
-                        <h3 class="timeline-title">Développement Open Source</h3>
+                        <h3 class="timeline-title">Diplôme BUT GEII</h3>
                         <p class="timeline-description">
-                            Contribuer activement à des projets open source majeurs et créer mes propres 
-                            bibliothèques pour la communauté de développeurs.
+                            Obtenir mon BUT Génie Électrique & Informatique Industrielle avec un parcours spécialisé en 
+                            Automatisme & Informatique Industrielle. Approfondir mes connaissances en systèmes embarqués, 
+                            réseaux industriels et supervision.
                         </p>
                     </div>
                     <div class="timeline-dot"></div>
@@ -628,11 +818,11 @@
 
                 <div class="timeline-item fade-in">
                     <div class="timeline-content">
-                        <div class="timeline-date">2028</div>
-                        <h3 class="timeline-title">Conférencier International</h3>
+                        <div class="timeline-date">2027-2029</div>
+                        <h3 class="timeline-title">Spécialisation ou École d'Ingénieur</h3>
                         <p class="timeline-description">
-                            Partager mes connaissances et expériences lors de conférences tech internationales 
-                            et inspirer la prochaine génération de développeurs.
+                            Poursuivre mes études en école d'ingénieur ou master spécialisé en automatisme, robotique ou 
+                            systèmes embarqués. Objectif : devenir ingénieur en automatisation et contribuer à l'Industrie 4.0.
                         </p>
                     </div>
                     <div class="timeline-dot"></div>
@@ -640,11 +830,25 @@
 
                 <div class="timeline-item fade-in">
                     <div class="timeline-content">
-                        <div class="timeline-date">2030</div>
-                        <h3 class="timeline-title">Leadership Tech</h3>
+                        <div class="timeline-date">2028-2030</div>
+                        <h3 class="timeline-title">Expertise Technique Internationale</h3>
                         <p class="timeline-description">
-                            Devenir CTO d'une entreprise innovante ou diriger une équipe technique de haut niveau 
-                            pour des projets à fort impact.
+                            Développer une expertise en systèmes automatisés complexes et travailler sur des projets 
+                            internationaux. Utiliser mes compétences linguistiques (Anglais C1, Espagnol B1) pour collaborer 
+                            avec des équipes multiculturelles.
+                        </p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Long terme</div>
+                        <h3 class="timeline-title">Innovation & Leadership</h3>
+                        <p class="timeline-description">
+                            Contribuer à l'innovation dans l'automatisation industrielle, participer à des projets de R&D, 
+                            et éventuellement encadrer des équipes techniques. Rester curieux et en veille technologique 
+                            permanente sur l'IA appliquée à l'industrie.
                         </p>
                     </div>
                     <div class="timeline-dot"></div>
@@ -655,49 +859,50 @@
 
     <section id="liens">
         <div class="container">
-            <h2>Liens Utiles</h2>
+            <h2>Me Contacter</h2>
             <div class="links-grid">
-                <a href="https://github.com" target="_blank" class="link-card fade-in">
-                    <span class="link-icon">💻</span>
-                    <h3 class="link-title">GitHub</h3>
-                    <p class="link-description">Découvrez mes projets open source et contributions</p>
+                <a href="mailto:boleslcc@gmail.com" class="link-card fade-in">
+                    <span class="link-icon">✉️</span>
+                    <h3 class="link-title">Email Personnel</h3>
+                    <p class="link-description">boleslcc@gmail.com</p>
                 </a>
 
-                <a href="https://linkedin.com" target="_blank" class="link-card fade-in">
+                <a href="mailto:lucas.boles@etu.univ-grenoble-alpes.fr" class="link-card fade-in">
+                    <span class="link-icon">🎓</span>
+                    <h3 class="link-title">Email Universitaire</h3>
+                    <p class="link-description">lucas.boles@etu.univ-grenoble-alpes.fr</p>
+                </a>
+
+                <a href="tel:+33670150329" class="link-card fade-in">
+                    <span class="link-icon">📱</span>
+                    <h3 class="link-title">Téléphone</h3>
+                    <p class="link-description">06 70 15 03 29</p>
+                </a>
+
+                <a href="https://www.linkedin.com/in/lucas-boles" target="_blank" class="link-card fade-in">
                     <span class="link-icon">💼</span>
                     <h3 class="link-title">LinkedIn</h3>
-                    <p class="link-description">Mon profil professionnel et mon réseau</p>
+                    <p class="link-description">Connectons-nous professionnellement</p>
                 </a>
 
-                <a href="https://codepen.io" target="_blank" class="link-card fade-in">
-                    <span class="link-icon">✨</span>
-                    <h3 class="link-title">CodePen</h3>
-                    <p class="link-description">Mes expérimentations créatives en code</p>
+                <a href="https://github.com/St3id" target="_blank" class="link-card fade-in">
+                    <span class="link-icon">💻</span>
+                    <h3 class="link-title">GitHub</h3>
+                    <p class="link-description">Mes projets et codes sources</p>
                 </a>
 
-                <a href="https://behance.net" target="_blank" class="link-card fade-in">
-                    <span class="link-icon">🎨</span>
-                    <h3 class="link-title">Behance</h3>
-                    <p class="link-description">Portfolio design et projets visuels</p>
-                </a>
-
-                <a href="https://medium.com" target="_blank" class="link-card fade-in">
-                    <span class="link-icon">📝</span>
-                    <h3 class="link-title">Blog</h3>
-                    <p class="link-description">Articles et tutoriels sur le développement</p>
-                </a>
-
-                <a href="mailto:contact@email.com" class="link-card fade-in">
-                    <span class="link-icon">✉️</span>
-                    <h3 class="link-title">Contact</h3>
-                    <p class="link-description">Envoyez-moi un message</p>
-                </a>
+                <div class="link-card fade-in" style="cursor: default;">
+                    <span class="link-icon">📍</span>
+                    <h3 class="link-title">Localisation</h3>
+                    <p class="link-description">Crolles (38920), Isère - France</p>
+                </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 [Votre Nom]. Conçu avec passion et créativité.</p>
+        <p>© 2026 Lucas BOLES - Étudiant BUT GEII - Passionné d'automatisation industrielle</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">Disponible pour un stage dès mi-avril 2026 (8-12 semaines)</p>
     </footer>
 
     <script>
