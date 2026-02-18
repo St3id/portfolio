@@ -702,6 +702,106 @@
             width: 150px;
         }
 
+        /* Contact Cards Animations */
+        .phone-card:hover .link-icon {
+            animation: ring 0.5s ease infinite;
+        }
+
+        @keyframes ring {
+            0% { transform: rotate(0); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(0); }
+            75% { transform: rotate(-15deg); }
+            100% { transform: rotate(0); }
+        }
+
+        .linkedin-card:hover .link-icon {
+            animation: pulse 1s ease infinite;
+            color: #0077b5;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .cv-card:hover .link-icon {
+            animation: bounce 0.8s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .location-card:hover .link-icon {
+            animation: pinDrop 1s ease infinite;
+        }
+
+        @keyframes pinDrop {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.1); }
+        }
+
+        /* Typing Effect */
+        .typing-container {
+            display: inline-block;
+        }
+
+        .typing-text::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Scroll Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 2000;
+            background: transparent;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Circuit Background */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .circuit-line {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 10s linear infinite;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
         /* Footer */
         footer {
             background: var(--primary);
@@ -772,6 +872,20 @@
     </style>
 </head>
 <body>
+    <div class="progress-container">
+        <div class="progress-bar" id="myBar"></div>
+    </div>
+
+    <svg class="circuit-bg" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+        <path class="circuit-line" d="M0,100 L100,100 L150,150 L300,150 L350,200 L500,200 L550,250 L700,250 L750,300 L900,300 L1000,400" />
+        <path class="circuit-line" d="M1000,600 L850,600 L800,550 L650,550 L600,500 L450,500 L400,450 L250,450 L200,400 L50,400 L0,350" />
+        <path class="circuit-line" d="M200,0 L200,100 L250,150 L250,300 L300,350 L300,500 L350,550 L350,700 L400,750 L400,900 L500,1000" />
+        <circle cx="100" cy="100" r="5" fill="var(--accent)" />
+        <circle cx="500" cy="200" r="5" fill="var(--accent)" />
+        <circle cx="900" cy="300" r="5" fill="var(--accent)" />
+        <circle cx="200" cy="400" r="5" fill="var(--accent)" />
+    </svg>
+
     <nav>
         <ul>
             <li><a href="#moi">À propos</a></li>
@@ -785,7 +899,7 @@
     <section id="moi">
         <div class="container hero-content">
             <h1>Lucas BOLES</h1>
-            <p class="hero-subtitle">Étudiant en Génie Électrique & Informatique Industrielle</p>
+            <p class="hero-subtitle typing-container"><span class="typing-text" data-text="Étudiant en Génie Électrique & Informatique Industrielle"></span></p>
             <p class="hero-description">
                 Passionné par l'automatisation industrielle et l'optimisation des systèmes, je développe mes compétences 
                 techniques à travers des projets concrets et des expériences variées. Mes stages au CEA et au CNRS m'ont 
@@ -1123,30 +1237,49 @@
                   </div>
               </div>
               
-              <a href="mailto:lucas.boles@etu.univ-grenoble-alpes.fr" class="link-card fade-in">
-                  <span class="link-icon">🎓</span>
-                  <h3 class="link-title">Email Universitaire</h3>
-                  <p class="link-description">lucas.boles@etu.univ-grenoble-alpes.fr</p>
-              </a>
-                <a href="tel:+33670150329" class="link-card fade-in">
+              <div class="envelope-wrapper fade-in">
+                  <div class="letter-image" onclick="window.location.href='mailto:lucas.boles@etu.univ-grenoble-alpes.fr'">
+                      <div class="animated-mail">
+                          <div class="back-fold"></div>
+                          <div class="front-text">
+                              <span class="link-icon">🎓</span>
+                              <h3 class="link-title">Email</h3>
+                          </div>
+                          <div class="letter">
+                              <div class="letter-border"></div>
+                              <h3 class="link-title" style="font-size: 0.9rem; margin-top: 10px;">Email Universitaire</h3>
+                              <p class="link-description" style="font-size: 0.75rem;">lucas.boles@etu.univ-grenoble-alpes.fr</p>
+                              <div class="letter-stamp">
+                                  <div class="letter-stamp-inner"></div>
+                              </div>
+                          </div>
+                          <div class="top-fold"></div>
+                          <div class="body"></div>
+                          <div class="left-fold"></div>
+                      </div>
+                      <div class="shadow"></div>
+                  </div>
+              </div>
+
+                <a href="tel:+33670150329" class="link-card fade-in phone-card">
                     <span class="link-icon">📱</span>
                     <h3 class="link-title">Téléphone</h3>
                     <p class="link-description">06 70 15 03 29</p>
                 </a>
 
-                <a href="https://www.linkedin.com/in/lucas-boles-2b027a389/" target="_blank" class="link-card fade-in">
+                <a href="https://www.linkedin.com/in/lucas-boles-2b027a389/" target="_blank" class="link-card fade-in linkedin-card">
                     <span class="link-icon">💼</span>
                     <h3 class="link-title">LinkedIn</h3>
                     <p class="link-description">linkedin.com/lucas-boles</p>
                 </a>
 
-                <a href="BOLES_Lucas_cv_03022026.pdf" download class="link-card fade-in">
+                <a href="BOLES_Lucas_cv_03022026.pdf" download class="link-card fade-in cv-card">
                     <span class="link-icon">📄</span>
                     <h3 class="link-title">Télécharger mon CV</h3>
                     <p class="link-description">Version PDF</p>
                 </a>
 
-                <div class="link-card fade-in" style="cursor: default;">
+                <div class="link-card fade-in location-card" style="cursor: default;">
                     <span class="link-icon">📍</span>
                     <h3 class="link-title">Localisation</h3>
                     <p class="link-description">Crolles (38920), Isère - France</p>
@@ -1203,7 +1336,10 @@
 
         window.addEventListener('scroll', () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (scrollTop / scrollHeight) * 100;
+            document.getElementById("myBar").style.width = scrolled + "%";
+
             // Gérer le hide/show de la nav
             if (scrollTop < scrollThreshold) {
                 nav.classList.remove('hidden');
@@ -1232,6 +1368,59 @@
                 if (link.getAttribute('href') && link.getAttribute('href').slice(1) === current) {
                     link.classList.add('active');
                 }
+            });
+        });
+
+        // Typing Effect
+        function typeWriter(element) {
+            const text = element.getAttribute('data-text');
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            }
+            type();
+        }
+
+        // Initialize Typing Effect
+        const typingText = document.querySelector('.typing-text');
+        if (typingText) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        typeWriter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            observer.observe(typingText);
+        }
+
+        // 3D Tilt Effect
+        const tiltCards = document.querySelectorAll('.project-card, .skill-category, .link-card');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
             });
         });
     </script>
