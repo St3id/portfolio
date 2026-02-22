@@ -163,8 +163,10 @@
             justify-content: center;
             transition: all 0.2s;
             user-select: none;
+            -webkit-user-select: none;
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
         }
 
         .cell:hover:not(.revealed):not(.flagged) {
@@ -254,97 +256,11 @@
             color: var(--text);
         }
 
-        .touch-controls {
-            display: none;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            align-items: center;
-        }
-
-        .touch-controls.active {
+        .grid-wrapper {
+            overflow-x: auto;
             display: flex;
-        }
-
-        .control-btn {
-            flex: 1;
-            padding: 1rem;
-            border: none;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            font-family: 'Work Sans', sans-serif;
-        }
-
-        .control-btn.reveal {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-        }
-
-        .control-btn.reveal:active {
-            transform: scale(0.98);
-        }
-
-        .control-btn.flag {
-            background: linear-gradient(145deg, #ffd700, #ffc700);
-            color: var(--primary);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-        }
-
-        .control-btn.flag:active {
-            transform: scale(0.98);
-        }
-
-        .mode-indicator {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            text-align: center;
-            font-weight: 500;
-            margin-top: -0.5rem;
-        }
-
-        .instructions-mobile {
-            display: none;
-            background: linear-gradient(135deg, #fff8f0, #fff5eb);
-            border-left: 4px solid var(--accent);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        .instructions-mobile.active {
-            display: block;
-        }
-
-        .instructions-mobile strong {
-            color: var(--accent);
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .instructions-mobile ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .instructions-mobile li {
-            margin: 0.5rem 0;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .instructions-mobile li::before {
-            content: '👉';
-            min-width: 20px;
+            margin-bottom: 2rem;
         }
 
         @media (max-width: 768px) {
@@ -409,17 +325,6 @@
                 font-size: 0.9rem;
             }
 
-            .touch-controls.active {
-                flex-direction: row;
-                gap: 0.8rem;
-            }
-
-            .control-btn {
-                padding: 0.9rem 0.8rem;
-                font-size: 0.95rem;
-                border-radius: 12px;
-            }
-
             .cell {
                 width: 32px;
                 height: 32px;
@@ -450,16 +355,10 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .back-button {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.8rem;
-                top: 1rem;
-                left: 1rem;
-            }
-
+        @media (max-width: 600px) {
             body {
                 padding: 0.5rem;
+                font-size: 14px;
             }
 
             .container {
@@ -480,11 +379,11 @@
             .controls {
                 padding: 1rem 0.8rem;
                 gap: 0.8rem;
-                margin-bottom: 1.2rem;
+                margin-bottom: 1rem;
             }
 
             .info {
-                gap: 0.8rem;
+                gap: 0.6rem;
                 font-size: 0.85rem;
             }
 
@@ -508,50 +407,123 @@
                 border-width: 1px;
             }
 
-            .touch-controls.active {
-                flex-direction: column;
-                gap: 0.6rem;
-                margin-bottom: 1rem;
-            }
-
-            .control-btn {
-                padding: 0.8rem 0.6rem;
-                font-size: 0.9rem;
-                border-radius: 10px;
-            }
-
             .cell {
-                width: 28px;
-                height: 28px;
-                font-size: 12px;
+                width: 26px;
+                height: 26px;
+                font-size: 11px;
                 gap: 0;
             }
 
             .grid {
                 gap: 1px;
                 padding: 1px;
-                border-width: 2px;
+            }
+
+            .grid-wrapper {
+                margin-bottom: 1rem;
             }
 
             .btn-new {
-                padding: 0.9rem;
-                font-size: 0.95rem;
+                padding: 0.8rem;
+                font-size: 0.9rem;
                 border-radius: 25px;
                 margin-bottom: 0.5rem;
             }
 
             .status {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
                 margin-top: 0.8rem;
             }
 
             .instructions {
-                display: none;
+                margin-top: 1rem;
+                padding: 0.8rem;
+                font-size: 0.8rem;
+                line-height: 1.5;
             }
 
-            .instructions-mobile.active {
-                margin-top: 1rem;
+            .back-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                top: 0.8rem;
+                left: 0.8rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            html {
+                font-size: 13px;
+            }
+
+            body {
+                padding: 0.3rem;
+            }
+
+            .container {
                 padding: 1rem 0.8rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.1rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .controls {
+                padding: 0.8rem;
+                gap: 0.6rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .info {
+                gap: 0.4rem;
+                font-size: 0.75rem;
+            }
+
+            .info-item span:first-child {
+                font-size: 1.1rem;
+            }
+
+            .diff-btn {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.65rem;
+            }
+
+            .cell {
+                width: 22px;
+                height: 22px;
+                font-size: 9px;
+            }
+
+            .grid {
+                gap: 0px;
+                padding: 0px;
+            }
+
+            .btn-new {
+                padding: 0.7rem;
+                font-size: 0.85rem;
+            }
+
+            .status {
+                font-size: 0.8rem;
+                margin-top: 0.6rem;
+            }
+
+            .instructions {
+                margin-top: 0.8rem;
+                padding: 0.6rem;
+                font-size: 0.75rem;
+                line-height: 1.4;
+            }
+
+            .back-button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -585,18 +557,7 @@
             </div>
         </div>
 
-        <div class="touch-controls" id="touchControls">
-            <button class="control-btn reveal" id="revealModeBtn">
-                <span>👆</span> Mode Révéler
-            </button>
-            <button class="control-btn flag" id="flagModeBtn">
-                <span>🚩</span> Mode Drapeau
-            </button>
-        </div>
-
-        <div class="mode-indicator" id="modeIndicator"></div>
-
-        <div class="grid-container">
+        <div class="grid-wrapper">
             <div class="grid" id="grid"></div>
         </div>
 
@@ -604,24 +565,13 @@
 
         <button class="btn-new" onclick="initGame()">Nouvelle Partie</button>
 
-        <div class="instructions" id="instructionsDesktop">
+        <div class="instructions">
             <strong>Comment jouer:</strong><br>
             • <strong>Clic gauche</strong> pour révéler une case<br>
             • <strong>Clic droit</strong> pour placer/retirer un drapeau 🚩<br>
+            • Sur mobile: <strong>tap court</strong> pour révéler, <strong>appui long</strong> pour drapeau<br>
             • Les chiffres indiquent le nombre de mines adjacentes<br>
             • Le premier clic ne peut jamais être une mine !
-        </div>
-
-        <div class="instructions-mobile" id="instructionsMobile">
-            <strong>📱 Comment jouer sur mobile:</strong>
-            <ul>
-                <li><strong>Bouton "Révéler"</strong> - Appuie pour passer en mode révélation</li>
-                <li><strong>Bouton "Drapeau"</strong> - Appuie pour passer en mode drapeau</li>
-                <li>Sélectionne un mode puis tape sur une case</li>
-                <li>Les <strong>chiffres</strong> = nombre de mines à côté</li>
-                <li>Le <strong>premier clic</strong> n'est jamais une mine!</li>
-                <li>Gagne en révélant toutes les cases sans mines!</li>
-            </ul>
         </div>
     </div>
 
@@ -631,12 +581,6 @@
         const flagCountEl = document.getElementById('flagCount');
         const timerEl = document.getElementById('timer');
         const statusEl = document.getElementById('status');
-        const touchControls = document.getElementById('touchControls');
-        const modeIndicator = document.getElementById('modeIndicator');
-        const revealModeBtn = document.getElementById('revealModeBtn');
-        const flagModeBtn = document.getElementById('flagModeBtn');
-        const instructionsMobile = document.getElementById('instructionsMobile');
-        const instructionsDesktop = document.getElementById('instructionsDesktop');
 
         let difficulty = 'easy';
         let gridSize = 9;
@@ -649,8 +593,9 @@
         let timer = 0;
         let timerInterval = null;
         let firstClick = true;
-        let isTouchDevice = () => (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
-        let touchMode = 'reveal';
+        let touchPressTimer = null;
+        let touchStartX = 0;
+        let touchStartY = 0;
 
         const difficulties = {
             easy: { size: 9, mines: 10 },
@@ -658,45 +603,30 @@
             hard: { size: 22, mines: 99 }
         };
 
-        let touchControlsSetup = false;
+        function handleCellTouchStart(e, x, y) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
 
-        function setupTouchControls() {
-            if (isTouchDevice()) {
-                touchControls.classList.add('active');
-                instructionsMobile.classList.add('active');
-                instructionsDesktop.style.display = 'none';
-                statusEl.style.display = 'none';
-
-                if (!touchControlsSetup) {
-                    revealModeBtn.addEventListener('click', () => {
-                        touchMode = 'reveal';
-                        revealModeBtn.style.opacity = '1';
-                        flagModeBtn.style.opacity = '0.6';
-                        modeIndicator.textContent = '👆 Mode Révéler actif';
-                    });
-
-                    flagModeBtn.addEventListener('click', () => {
-                        touchMode = 'flag';
-                        flagModeBtn.style.opacity = '1';
-                        revealModeBtn.style.opacity = '0.6';
-                        modeIndicator.textContent = '🚩 Mode Drapeau actif';
-                    });
-                    touchControlsSetup = true;
-                }
-
-                revealModeBtn.style.opacity = '1';
-                flagModeBtn.style.opacity = '0.6';
-                modeIndicator.textContent = '👆 Mode Révéler actif';
-            } else {
-                touchControls.classList.remove('active');
-                instructionsMobile.classList.remove('active');
-                instructionsDesktop.style.display = 'block';
-                statusEl.style.display = 'block';
-            }
+            touchPressTimer = setTimeout(() => {
+                toggleFlag(x, y);
+                touchPressTimer = null;
+            }, 500);
         }
 
-        setupTouchControls();
-        window.addEventListener('resize', setupTouchControls);
+        function handleCellTouchEnd(e, x, y) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const distX = Math.abs(touchEndX - touchStartX);
+            const distY = Math.abs(touchEndY - touchStartY);
+
+            if (touchPressTimer !== null) {
+                clearTimeout(touchPressTimer);
+                if (distX < 10 && distY < 10) {
+                    revealCell(x, y);
+                }
+                touchPressTimer = null;
+            }
+        }
 
         // Sélection difficulté
         document.querySelectorAll('.diff-btn').forEach(btn => {
@@ -816,24 +746,13 @@
                         cell.textContent = '🚩';
                     }
 
-                    cell.addEventListener('click', () => {
-                        if (isTouchDevice()) {
-                            if (touchMode === 'reveal') {
-                                revealCell(x, y);
-                            } else {
-                                toggleFlag(x, y);
-                            }
-                        } else {
-                            revealCell(x, y);
-                        }
+                    cell.addEventListener('click', () => revealCell(x, y));
+                    cell.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        toggleFlag(x, y);
                     });
-
-                    if (!isTouchDevice()) {
-                        cell.addEventListener('contextmenu', (e) => {
-                            e.preventDefault();
-                            toggleFlag(x, y);
-                        });
-                    }
+                    cell.addEventListener('touchstart', (e) => handleCellTouchStart(e, x, y), false);
+                    cell.addEventListener('touchend', (e) => handleCellTouchEnd(e, x, y), false);
 
                     gridEl.appendChild(cell);
                 }
