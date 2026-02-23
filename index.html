@@ -225,7 +225,7 @@
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
             gap: 4rem;
-            align-items: center;
+            align-items: start;
         }
 
         .hero-visual {
@@ -313,8 +313,8 @@
 
         .key-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
             width: 100%;
         }
 
@@ -1229,16 +1229,13 @@
                         un langage robuste utilisé dans les systèmes critiques et embarqués, domaine qui correspond parfaitement à mes ambitions 
                         professionnelles en automatisme industriel.
                     </p>
-                    <div class="info-item" style="margin-bottom: 2rem;">📍 <strong>Crolles, Isère (38)</strong> | 🎓 <strong>BUT GEII 2ème année</strong> | 🚗 <strong>Permis B</strong></div>
-                    
-                    <div class="hero-info">
-                        <div class="info-item">📍 <strong>Crolles, Isère (38)</strong></div>
-                        <div class="info-item">🎓 <strong>BUT GEII 2ème année</strong> - IUT1 Grenoble Alpes</div>
-                        <div class="info-item">🎯 <strong>Parcours:</strong> Automatisme & Informatique Industrielle</div>
-                        <div class="info-item">🚗 <strong>Permis B</strong></div>
-                        <div class="info-item">🌍 <strong>Anglais C1</strong> (Certifié Bright Language 2025 et 885/990 TOEIC 2026)</div>
+                    <div class="info-item" style="margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; display: inline-block;">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Crolles+Isere+France" target="_blank" style="text-decoration: none; color: inherit;" title="Voir sur Google Maps">📍 <strong>Crolles, Isère (38)</strong></a> | 
+                        <span title="Automatisme & Informatique Industrielle" style="cursor: help;">🎓 <strong>BUT GEII 2ème année</strong></span> | 
+                        🚗 <strong>Permis B</strong> | 
+                        <span title="Certifié Bright Language 2025 et 885/990 TOEIC 2026" style="cursor: help;">🌍 <strong>Anglais C1</strong></span>
                     </div>
-
+                    
                     <div class="tabs-container fade-in">
                         <div class="tabs-buttons">
                             <button class="tab-btn active" onclick="openTab(event, 'compete-content')">Compétences</button>
@@ -1323,8 +1320,12 @@
                     </div>
                     <div class="key-stats">
                         <div class="stat-card glass-card">
-                            <span class="stat-number">BUT 2</span>
-                            <span class="stat-label">Niveau d'études</span>
+                            <span class="stat-number" style="font-size: 1.2rem;">BUT GEII 2</span>
+                            <span class="stat-label">Formation Actuelle</span>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <span class="stat-number" style="font-size: 1.2rem;">AII</span>
+                            <span class="stat-label">Parcours</span>
                         </div>
                         <div class="stat-card glass-card">
                             <span class="stat-number">3</span>
