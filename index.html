@@ -469,6 +469,54 @@
             color: white;
         }
 
+        /* Tabs System */
+        .tabs-container {
+            margin-top: 2rem;
+        }
+
+        .tabs-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 2rem;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Skills Section */
         .skills-grid {
             display: grid;
@@ -1190,6 +1238,79 @@
                         <div class="info-item">🚗 <strong>Permis B</strong></div>
                         <div class="info-item">🌍 <strong>Anglais C1</strong> (Certifié Bright Language 2025 et 885/990 TOEIC 2026)</div>
                     </div>
+
+                    <div class="tabs-container fade-in">
+                        <div class="tabs-buttons">
+                            <button class="tab-btn active" onclick="openTab(event, 'compete-content')">Compétences</button>
+                            <button class="tab-btn" onclick="openTab(event, 'passions-content')">Passions</button>
+                        </div>
+
+                        <div id="compete-content" class="tab-content active">
+                            <div class="skills-grid" style="margin-bottom: 0;">
+                                <div class="skill-category glass-card">
+                                    <h3>💻 Programmation</h3>
+                                    <div class="skill-item"><span>Python</span><span class="skill-level">Bonne maîtrise</span></div>
+                                    <div class="skill-item"><span>C</span><span class="skill-level">Bonne maîtrise</span></div>
+                                    <div class="skill-item"><span>Arduino</span><span class="skill-level">Bonne maîtrise</span></div>
+                                    <div class="skill-item"><span>Java</span><span class="skill-level">En développement</span></div>
+                                    <div class="skill-item"><span>ADA</span><span class="skill-level">En apprentissage</span></div>
+                                </div>
+                                <div class="skill-category glass-card">
+                                    <h3>⚙️ Automatisme</h3>
+                                    <div class="skill-item"><span>Control Expert</span><span class="skill-level">Bonne maîtrise</span></div>
+                                    <div class="skill-item"><span>Vijeo Designer</span><span class="skill-level">IHM</span></div>
+                                    <div class="skill-item"><span>Automates Schneider</span><span class="skill-level">Pratique</span></div>
+                                    <div class="skill-item"><span>Grafcet</span><span class="skill-level">Maîtrisé</span></div>
+                                </div>
+                                <div class="skill-category glass-card">
+                                    <h3>🛠️ Outils</h3>
+                                    <div class="skill-item"><span>KiCad</span><span class="skill-level">CAO Électronique</span></div>
+                                    <div class="skill-item"><span>Pack Office</span><span class="skill-level">Bonne maîtrise</span></div>
+                                    <div class="skill-item"><span>Logiciels CAO</span><span class="skill-level">Pratique</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="passions-content" class="tab-content">
+                            <div class="passions-grid" style="margin-top: 0;">
+                                <div class="passion-card glass-card">
+                                    <div class="passion-image"><img src="Code.jpg" alt="Apprentissage Continu"></div>
+                                    <div class="passion-content">
+                                        <h4>Apprentissage Continu</h4>
+                                        <p>Toujours en quête de nouveaux langages et outils (actuellement sur ADA)</p>
+                                    </div>
+                                </div>
+                                <div class="passion-card glass-card">
+                                    <div class="passion-image"><img src="Escalade.jpg" alt="Escalade"></div>
+                                    <div class="passion-content">
+                                        <h4>Escalade</h4>
+                                        <p>Niveau 7A - Un sport qui allie force, technique et mental</p>
+                                    </div>
+                                </div>
+                                <div class="passion-card glass-card">
+                                    <div class="passion-image"><img src="Photo volley.jpg" alt="Volley-ball"></div>
+                                    <div class="passion-content">
+                                        <h4>Volley-ball</h4>
+                                        <p>Esprit d'équipe et dynamisme sur le terrain</p>
+                                    </div>
+                                </div>
+                                <div class="passion-card glass-card">
+                                    <div class="passion-image"><img src="Photo plongé.jpg" alt="Plongée"></div>
+                                    <div class="passion-content">
+                                        <h4>Plongée</h4>
+                                        <p>Certifié PADI Open Water - Exploration des fonds marins</p>
+                                    </div>
+                                </div>
+                                <div class="passion-card glass-card">
+                                    <div class="passion-image"><img src="amour de la montagne.jpg" alt="Amour de la montagne"></div>
+                                    <div class="passion-content">
+                                        <h4>Amour de la montagne</h4>
+                                        <p>Randonnées, paysages et air pur - ma source d'évasion et de sérénité</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="hero-visual fade-in">
@@ -1213,119 +1334,6 @@
                             <span class="stat-number">5+</span>
                             <span class="stat-label">Langages maîtrisés</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <h2 style="margin-top: 4rem;">Compétences Techniques</h2>
-            <div class="skills-grid fade-in">
-                <div class="skill-category glass-card">
-                    <h3>💻 Programmation</h3>
-                    <div class="skill-item">
-                        <span>Python</span>
-                        <span class="skill-level">Bonne maîtrise</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>C</span>
-                        <span class="skill-level">Bonne maîtrise</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Arduino</span>
-                        <span class="skill-level">Bonne maîtrise</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Java</span>
-                        <span class="skill-level">En développement</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>ADA</span>
-                        <span class="skill-level">En apprentissage</span>
-                    </div>
-                </div>
-
-                <div class="skill-category glass-card">
-                    <h3>⚙️ Automatisme</h3>
-                    <div class="skill-item">
-                        <span>Control Expert</span>
-                        <span class="skill-level">Bonne maîtrise</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Vijeo Designer</span>
-                        <span class="skill-level">IHM</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Automates Schneider</span>
-                        <span class="skill-level">Pratique</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Grafcet</span>
-                        <span class="skill-level">Maîtrisé</span>
-                    </div>
-                </div>
-
-                <div class="skill-category glass-card">
-                    <h3>🛠️ Outils</h3>
-                    <div class="skill-item">
-                        <span>KiCad</span>
-                        <span class="skill-level">CAO Électronique</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Pack Office</span>
-                        <span class="skill-level">Bonne maîtrise</span>
-                    </div>
-                    <div class="skill-item">
-                        <span>Logiciels CAO</span>
-                        <span class="skill-level">Pratique</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <h2 id="passions" style="margin-top: 4rem;">Mes Passions</h2>
-            <div class="passions-grid fade-in">
-                <div class="passion-card glass-card">
-                    <div class="passion-image">
-                        <img src="Code.jpg" alt="Apprentissage Continu">
-                    </div>
-                    <div class="passion-content">
-                        <h4>Apprentissage Continu</h4>
-                        <p>Toujours en quête de nouveaux langages et outils (actuellement sur ADA)</p>
-                    </div>
-                </div>
-                <div class="passion-card glass-card">
-                    <div class="passion-image">
-                        <img src="Escalade.jpg" alt="Escalade">
-                    </div>
-                    <div class="passion-content">
-                        <h4>Escalade</h4>
-                        <p>Niveau 7A - Un sport qui allie force, technique et mental</p>
-                    </div>
-                </div>
-                <div class="passion-card glass-card">
-                    <div class="passion-image">
-                        <img src="Photo volley.jpg" alt="Volley-ball">
-                    </div>
-                    <div class="passion-content">
-                        <h4>Volley-ball</h4>
-                        <p>Esprit d'équipe et dynamisme sur le terrain</p>
-                    </div>
-                </div>
-                <div class="passion-card glass-card">
-                    <div class="passion-image">
-                        <img src="Photo plongé.jpg" alt="Plongée">
-                    </div>
-                    <div class="passion-content">
-                        <h4>Plongée</h4>
-                        <p>Certifié PADI Open Water - Exploration des fonds marins</p>
-                    </div>
-                </div>
-                <div class="passion-card glass-card">
-                    <div class="passion-image">
-                        <img src="amour de la montagne.jpg" alt="Amour de la montagne">
-                    </div>
-                    <div class="passion-content">
-                        <h4>Amour de la montagne</h4>
-                        <p>Randonnées, paysages et air pur - ma source d'évasion et de sérénité</p>
                     </div>
                 </div>
             </div>
@@ -1592,6 +1600,20 @@
     </footer>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
         // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
