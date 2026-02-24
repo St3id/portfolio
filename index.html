@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1400">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucas BOLES - Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -35,16 +35,54 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 2rem 4rem;
+            padding: 1.5rem 2rem;
             background: rgba(250, 250, 248, 0.95);
             backdrop-filter: blur(10px);
             z-index: 1000;
             border-bottom: 1px solid var(--border);
             animation: slideDown 0.8s ease;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             transition: transform 0.3s ease;
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text);
+            margin: 4px 0;
+            transition: 0.4s;
+            border-radius: 2px;
+        }
+
+        .menu-toggle.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active .bar:nth-child(1) {
+            transform: translateY(11px) rotate(45deg);
+        }
+
+        .menu-toggle.active .bar:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
         }
 
         nav.hidden {
@@ -964,6 +1002,134 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .passions-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-container {
+                justify-content: space-between;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            #nav-list {
+                position: absolute;
+                top: 100%;
+                left: -1rem;
+                right: -1rem;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-bottom: 1px solid var(--border);
+                display: none;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            #nav-list.active {
+                display: flex;
+            }
+
+            nav ul li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .game-button {
+                right: 0;
+                position: relative;
+                top: auto;
+                transform: none;
+            }
+
+            .game-button:hover {
+                transform: scale(1.1);
+            }
+
+            section {
+                padding: 6rem 2rem 3rem;
+            }
+
+            .passions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: row !important;
+                padding-left: 60px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-buttons {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .passions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .profile-photo-container {
+                width: 250px;
+                height: 250px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -982,13 +1148,20 @@
     </svg>
 
     <nav>
-        <ul>
-            <li><a href="#moi">À propos</a></li>
-            <li><a href="#projets">Mes Projets</a></li>
-            <li><a href="#projections">Objectifs</a></li>
-            <li><a href="#liens">Contact</a></li>
-        </ul>
-        <a href="minesweeper.html" class="game-button" title="Jouer au Démineur">🎮</a>
+        <div class="nav-container">
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul id="nav-list">
+                <li><a href="#moi">À propos</a></li>
+                <li><a href="#projets">Mes Projets</a></li>
+                <li><a href="#projections">Objectifs</a></li>
+                <li><a href="#liens">Contact</a></li>
+            </ul>
+            <a href="minesweeper.html" class="game-button" title="Jouer au Démineur">🎮</a>
+        </div>
     </nav>
 
     <section id="moi">
@@ -1530,6 +1703,23 @@
             
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+
+        mobileMenu.addEventListener('click', () => {
+            navList.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('#nav-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                navList.classList.remove('active');
+                mobileMenu.classList.remove('active');
             });
         });
     </script>
