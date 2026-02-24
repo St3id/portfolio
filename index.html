@@ -1127,29 +1127,36 @@
             }
 
             .timeline::before {
-                display: none;
+                left: 50%;
+                display: block;
             }
 
             .timeline {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.6rem;
+                display: block;
             }
 
             .timeline-item {
-                flex-direction: column !important;
-                padding-left: 0;
-                margin-bottom: 0;
+                display: flex;
+                margin-bottom: 1.5rem;
+                position: relative;
+            }
+
+            .timeline-item:nth-child(odd) {
+                flex-direction: row-reverse;
             }
 
             .timeline-content {
-                width: 100%;
+                width: calc(50% - 15px);
                 padding: 0.5rem;
-                height: 100%;
             }
 
             .timeline-dot {
-                display: none;
+                display: block;
+                width: 12px;
+                height: 12px;
+                left: 50%;
+                border-width: 2px;
+                box-shadow: 0 0 0 2px var(--accent-soft);
             }
 
             .timeline-title {
