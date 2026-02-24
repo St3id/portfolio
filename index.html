@@ -4,6 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucas BOLES - Portfolio</title>
+    <meta name="description" content="Portfolio de Lucas BOLES, etudiant en BUT GEII parcours AII, en recherche d'alternance 2026 en automatisme et informatique industrielle.">
+    <meta name="keywords" content="Lucas Boles, portfolio, BUT GEII, automatisme, informatique industrielle, alternance 2026, Control Expert, Vijeo Designer, Schneider">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="./">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="Lucas BOLES - Portfolio">
+    <meta property="og:description" content="Etudiant en BUT GEII parcours AII, en recherche d'alternance 2026 en automatisme et informatique industrielle.">
+    <meta property="og:url" content="./">
+    <meta property="og:image" content="Photo%20de%20profil%20cv.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lucas BOLES - Portfolio">
+    <meta name="twitter:description" content="Etudiant en BUT GEII, recherche d'alternance 2026 en automatisme et informatique industrielle.">
+    <meta name="twitter:image" content="Photo%20de%20profil%20cv.jpg">
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Lucas BOLES",
+          "jobTitle": "Etudiant BUT GEII - parcours AII",
+          "email": "mailto:boleslcc@gmail.com",
+          "telephone": "+33670150329",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Crolles",
+            "addressRegion": "Isere",
+            "addressCountry": "FR"
+          },
+          "url": "./",
+          "sameAs": [
+            "https://www.linkedin.com/in/lucas-boles-2b027a389/"
+          ]
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Quel poste recherchez-vous en alternance ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Je recherche une alternance orientee automatisme industriel, supervision IHM, programmation d'automates et integration de systemes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Quelles technologies maitrisez-vous ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "J'utilise notamment Control Expert, Vijeo Designer, Grafcet, Python, C et Arduino, avec une progression continue sur ADA."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Etes-vous mobile ?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Oui. Base a Crolles en Isere, je suis mobile selon le projet et l'opportunite."
+              }
+            }
+          ]
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1118,6 +1184,66 @@
             margin-bottom: 0.5rem;
         }
 
+        /* FAQ */
+        .faq-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0.1rem 1.1rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-item[open] {
+            border-color: var(--accent-soft);
+            box-shadow: 0 10px 28px rgba(255, 107, 53, 0.12);
+        }
+
+        .faq-question {
+            list-style: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            padding: 1rem 1.4rem 1rem 0;
+            position: relative;
+        }
+
+        .faq-question::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .faq-item[open] .faq-question::after {
+            content: '-';
+        }
+
+        .faq-question:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+
+        .faq-answer {
+            color: var(--text-light);
+            line-height: 1.75;
+            padding: 0 0 1rem;
+        }
+
         /* Glassmorphism */
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
@@ -1510,6 +1636,15 @@
                 width: 250px;
                 height: 250px;
             }
+
+            .faq-question {
+                font-size: 0.9rem;
+            }
+
+            .faq-answer {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
         }
     </style>
 </head>
@@ -1539,6 +1674,7 @@
                 <li><a href="#moi">À propos</a></li>
                 <li><a href="#projets">Mes Projets</a></li>
                 <li><a href="#projections">Objectifs</a></li>
+                <li><a href="#faq">FAQ</a></li>
                 <li><a href="#liens">Contact</a></li>
             </ul>
             <a href="minesweeper.html" class="game-button" title="Jouer au Démineur">🎮</a>
@@ -1921,6 +2057,53 @@
             </div>
         </div>
     </div>
+
+    <section id="faq">
+        <div class="container">
+            <h2>FAQ</h2>
+            <div class="faq-grid">
+                <details class="faq-item fade-in" open>
+                    <summary class="faq-question">Quel poste recherchez-vous en alternance ?</summary>
+                    <p class="faq-answer">
+                        Je recherche une alternance orientee automatisme industriel : programmation d'automates,
+                        supervision IHM, mise en service et amelioration de process.
+                    </p>
+                </details>
+
+                <details class="faq-item fade-in">
+                    <summary class="faq-question">Quelles technologies maitrisez-vous deja ?</summary>
+                    <p class="faq-answer">
+                        J'utilise Control Expert, Vijeo Designer, Grafcet, Python, C et Arduino.
+                        Je poursuis aussi un apprentissage actif du langage ADA.
+                    </p>
+                </details>
+
+                <details class="faq-item fade-in">
+                    <summary class="faq-question">Sur quels types de projets souhaitez-vous travailler ?</summary>
+                    <p class="faq-answer">
+                        Priorite aux projets industriels concrets : automatisation de lignes, pilotage d'equipements,
+                        fiabilisation, securite fonctionnelle et optimisation de production.
+                    </p>
+                </details>
+
+                <details class="faq-item fade-in">
+                    <summary class="faq-question">Etes-vous mobile en France ?</summary>
+                    <p class="faq-answer">
+                        Oui. Je suis base a Crolles (Isere) et je peux etudier une mobilite selon l'opportunite,
+                        le projet et le rythme d'alternance.
+                    </p>
+                </details>
+
+                <details class="faq-item fade-in">
+                    <summary class="faq-question">Comment vous contacter rapidement ?</summary>
+                    <p class="faq-answer">
+                        Le plus simple est via la section contact de ce site : email personnel, email universitaire,
+                        telephone et LinkedIn.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
 
     <section id="liens">
         <div class="container">
