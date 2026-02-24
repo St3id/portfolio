@@ -165,6 +165,40 @@
             gap: 0.8rem;
         }
 
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 999px;
+            padding: 0.12rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            line-height: 1;
+            padding: 0.34rem 0.52rem;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+        }
+
+        .lang-btn:hover {
+            color: var(--primary);
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
         .cv-nav-link {
             display: inline-flex;
             align-items: center;
@@ -202,11 +236,25 @@
             background: transparent;
             border: none;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, filter 0.3s ease;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
+            isolation: isolate;
+            will-change: transform, filter;
+        }
+
+        .game-button::before {
+            content: '';
+            position: absolute;
+            inset: -0.2rem;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.3) 0%, rgba(255, 107, 53, 0) 70%);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: -1;
         }
 
         .game-button::after {
@@ -215,6 +263,39 @@
 
         .game-button:hover {
             transform: scale(1.15);
+        }
+
+        .game-button:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .game-button:active {
+            transform: scale(0.9) rotate(-8deg);
+        }
+
+        .game-button.pressed {
+            animation:
+                gameButtonLaunch 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                gameButtonPulse 0.55s ease;
+        }
+
+        .game-button.launching {
+            pointer-events: none;
+            filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.4));
+        }
+
+        @keyframes gameButtonLaunch {
+            0% { transform: scale(1) rotate(0deg); }
+            30% { transform: scale(0.86) rotate(-10deg); }
+            65% { transform: scale(1.18) rotate(8deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes gameButtonPulse {
+            0% { filter: drop-shadow(0 0 0 rgba(255, 107, 53, 0)); }
+            45% { filter: drop-shadow(0 0 14px rgba(255, 107, 53, 0.65)); }
+            100% { filter: drop-shadow(0 0 0 rgba(255, 107, 53, 0)); }
         }
 
         @keyframes slideDown {
@@ -1180,6 +1261,348 @@
             border-radius: 8px;
         }
 
+        .game-launch {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.2rem;
+            background:
+                radial-gradient(circle at top right, rgba(255, 107, 53, 0.25), rgba(15, 15, 15, 0.9) 55%),
+                rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(3px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.28s ease, visibility 0.28s ease;
+            z-index: 3000;
+        }
+
+        .game-launch::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 45%),
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.04) 0px,
+                    rgba(255, 255, 255, 0.04) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            transition: opacity 0.25s ease;
+        }
+
+        .game-launch.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .game-launch.open::after {
+            opacity: 0.45;
+            animation: gameLaunchStatic 1.8s steps(8, end) infinite;
+        }
+
+        .game-launch[data-phase="warp"]::after {
+            opacity: 0.75;
+            animation-duration: 0.38s;
+        }
+
+        .game-launch-open {
+            overflow: hidden;
+        }
+
+        .game-launch-panel {
+            width: min(700px, 100%);
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: linear-gradient(160deg, #111111 0%, #191919 55%, #242424 100%);
+            color: #f7f7f7;
+            padding: 1.4rem 1.5rem;
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: gameLaunchPanelIn 0.45s ease both;
+        }
+
+        .game-launch-panel::after {
+            content: '';
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            top: -110px;
+            right: -120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.26) 0%, rgba(255, 107, 53, 0) 75%);
+            pointer-events: none;
+        }
+
+        .game-launch-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 0%, rgba(255, 107, 53, 0.18) 45%, transparent 90%);
+            transform: translateX(-120%);
+            animation: gameLaunchScan 1.2s ease 0.15s 1;
+            pointer-events: none;
+        }
+
+        @keyframes gameLaunchPanelIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes gameLaunchScan {
+            to {
+                transform: translateX(120%);
+            }
+        }
+
+        @keyframes gameLaunchStatic {
+            0% { transform: translateY(0); }
+            20% { transform: translateY(-1px); }
+            40% { transform: translateY(1px); }
+            60% { transform: translateY(0); }
+            80% { transform: translateY(1px); }
+            100% { transform: translateY(0); }
+        }
+
+        .game-launch-kicker {
+            margin-bottom: 0.5rem;
+            color: var(--accent-soft);
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .game-launch-kicker::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.75);
+            animation: gameLaunchDotBlink 0.95s ease infinite;
+        }
+
+        @keyframes gameLaunchDotBlink {
+            0%, 100% { opacity: 0.3; transform: scale(0.85); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .game-launch-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.25rem, 3vw, 1.8rem);
+            line-height: 1.3;
+            margin-bottom: 0.85rem;
+        }
+
+        .game-launch-line {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: rgba(247, 247, 247, 0.9);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.55rem;
+        }
+
+        .game-launch-line::before {
+            content: attr(data-launch-step);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 0.68rem;
+            font-weight: 700;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 0.12rem;
+            transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+        }
+
+        .game-launch-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .game-launch-line.visible::before {
+            border-color: rgba(255, 178, 135, 0.8);
+            color: #111111;
+            background: rgba(255, 178, 135, 0.95);
+        }
+
+        .game-launch-favs {
+            margin: 0.35rem 0 0.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .game-launch-favs.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .game-launch-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.56rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 178, 135, 0.4);
+            background: rgba(255, 107, 53, 0.14);
+            color: #ffe5d8;
+            font-size: 0.72rem;
+            letter-spacing: 0.03em;
+            transform: translateY(2px);
+            opacity: 0;
+        }
+
+        .game-launch-favs.visible .game-launch-chip {
+            animation: gameLaunchChipIn 0.35s ease forwards;
+        }
+
+        .game-launch-favs.visible .game-launch-chip:nth-child(2) { animation-delay: 0.05s; }
+        .game-launch-favs.visible .game-launch-chip:nth-child(3) { animation-delay: 0.1s; }
+        .game-launch-favs.visible .game-launch-chip:nth-child(4) { animation-delay: 0.15s; }
+
+        @keyframes gameLaunchChipIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .game-launch-progress {
+            margin-top: 0.9rem;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .game-launch-bar {
+            display: block;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #ffb287);
+        }
+
+        @keyframes gameLaunchFill {
+            to {
+                width: 100%;
+            }
+        }
+
+        .game-launch-actions {
+            margin-top: 0.85rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .game-launch-confirm {
+            border: 1px solid rgba(255, 178, 135, 0.9);
+            background: linear-gradient(100deg, var(--accent), #ff9e73);
+            color: #111111;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
+        }
+
+        .game-launch.ready .game-launch-confirm {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .game-launch-confirm:hover {
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+            filter: brightness(1.03);
+        }
+
+        .game-launch-confirm:active {
+            transform: translateY(1px);
+        }
+
+        .game-launch-confirm:disabled {
+            cursor: not-allowed;
+        }
+
+        .game-launch-foot {
+            margin-top: 0.62rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(247, 247, 247, 0.62);
+        }
+
+        .game-launch-panel.final-flash {
+            animation: gameLaunchFinalFlash 0.34s ease;
+        }
+
+        @keyframes gameLaunchFinalFlash {
+            0% { box-shadow: 0 26px 80px rgba(0, 0, 0, 0.5); }
+            45% { box-shadow: 0 16px 95px rgba(255, 107, 53, 0.45); }
+            100% { box-shadow: 0 26px 80px rgba(0, 0, 0, 0.5); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .game-launch::after,
+            .game-launch.open::after {
+                animation: none;
+                opacity: 0.25;
+            }
+
+            .game-launch-panel,
+            .game-launch-panel::before,
+            .game-launch-panel::after,
+            .game-launch-kicker::before {
+                animation: none;
+            }
+
+            .game-launch-line,
+            .game-launch-favs,
+            .game-launch-chip,
+            .game-launch-confirm {
+                transition: none;
+                transform: none;
+            }
+        }
+
         /* Projections Timeline */
         #projections {
             background: 
@@ -1645,6 +2068,11 @@
                 gap: 0.55rem;
             }
 
+            .lang-btn {
+                font-size: 0.62rem;
+                padding: 0.3rem 0.46rem;
+            }
+
             .cv-nav-link {
                 padding: 0.42rem 0.7rem;
                 font-size: 0.68rem;
@@ -1797,6 +2225,37 @@
                 line-height: 1.6;
             }
 
+            .game-launch-panel {
+                border-radius: 16px;
+                padding: 1.05rem 1rem;
+            }
+
+            .game-launch-title {
+                font-size: 1.1rem;
+            }
+
+            .game-launch-line {
+                font-size: 0.82rem;
+                line-height: 1.5;
+            }
+
+            .game-launch-favs {
+                gap: 0.3rem;
+            }
+
+            .game-launch-chip {
+                font-size: 0.64rem;
+                padding: 0.2rem 0.42rem;
+            }
+
+            .game-launch-foot {
+                font-size: 0.7rem;
+            }
+
+            .game-launch-actions {
+                justify-content: center;
+            }
+
             .timeline::before {
                 left: 50%;
                 display: block;
@@ -1934,6 +2393,10 @@
                 <li><a href="#liens">Contact</a></li>
             </ul>
             <div class="nav-actions">
+                <div class="lang-switch" role="group" aria-label="Choisir la langue">
+                    <button type="button" class="lang-btn active" data-lang="fr" aria-pressed="true">FR</button>
+                    <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+                </div>
                 <a href="BOLES_Lucas_cv_03022026.pdf" download class="cv-nav-link" title="Télécharger mon CV">
                     <span class="cv-icon" aria-hidden="true">&#11015;</span>
                     <span>CV</span>
@@ -2059,9 +2522,9 @@
                             </div>
                         </div>
                         <div class="passion-card glass-card">
-                            <div class="passion-image"><img src="amour de la montagne.jpg" alt="Amour de la montagne"></div>
+                            <div class="passion-image"><img src="amour de la montagne.jpg" alt="La montagne"></div>
                             <div class="passion-content">
-                                <h4>Amour de la montagne</h4>
+                                <h4>La montagne</h4>
                                 <p>Randonnées, paysages et air pur - ma source d'évasion et de sérénité</p>
                             </div>
                         </div>
@@ -2094,9 +2557,9 @@
             <h2>Mes Projets & Expériences</h2>
             <div class="projects-grid">
                 <div class="project-card fade-in glass-card"
-                     data-modal-details="Extraits de l'analyse fonctionnelle (version K - 25/10/2025) : architecture en Grafcet (Conduite, GARU, INIT et cycles de production), gestion des securites/ARU, logique d'initialisation globale. Outils cites : Schneider EcoStruxure Control Expert V15.3 et Vijeo Designer 6.3, avec capteurs de position et routines Ladder."
+                     data-modal-details="Extraits de l'analyse fonctionnelle (version K - 25/10/2025) : architecture en Grafcet (Conduite, GARU, INIT et cycles de production), gestion des sécurités/ARU, logique d'initialisation globale. Outils cités : Schneider EcoStruxure Control Expert V15.3 et Vijeo Designer 6.3, avec capteurs de position et routines Ladder."
                      data-modal-file="AF_TraitementSurface_LucasBOLES_vK.pdf"
-                     data-modal-file-label="Telecharger l'analyse fonctionnelle (PDF)">
+                     data-modal-file-label="Télécharger l'analyse fonctionnelle (PDF)">
                     <div class="project-image">
                         <img loading="lazy" decoding="async" src="Système Automatisé de Transport sur Rail.png" alt="Banc d'essai transport sur rail">
                     </div>
@@ -2239,7 +2702,7 @@
                 <div id="project-modal-gallery" class="project-modal-gallery" hidden></div>
                 <div id="project-modal-actions" class="project-modal-actions" hidden>
                     <a id="project-modal-download" class="project-modal-download" href="#" download>
-                        Telecharger le document (PDF)
+                        Télécharger le document (PDF)
                     </a>
                 </div>
                 <div id="project-modal-tags" class="project-modal-tags"></div>
@@ -2427,6 +2890,30 @@
             <a href="mentions-legales.html" class="footer-legal-link">Mentions Légales</a>
         </p>
     </footer>
+
+    <div class="game-launch" id="game-launch" aria-hidden="true">
+        <div class="game-launch-panel" role="dialog" aria-modal="true" aria-labelledby="game-launch-title">
+            <p class="game-launch-kicker">Passion Gaming</p>
+            <h3 class="game-launch-title" id="game-launch-title">Compétition, équipe, dépassement</h3>
+            <p class="game-launch-line" data-launch-step="1">Les jeux vidéo m'ont forgé un vrai côté compétitif et l'envie de toujours me dépasser.</p>
+            <p class="game-launch-line" data-launch-step="2">J'ai toujours aimé les jeux vidéo, de tous les types, mais je suis plus attiré par les jeux équipe contre équipe.</p>
+            <p class="game-launch-line" data-launch-step="3">Mes coups de cœur:</p>
+            <div class="game-launch-favs" id="game-launch-favs" aria-label="Coups de cœur jeux vidéo">
+                <span class="game-launch-chip">Warframe</span>
+                <span class="game-launch-chip">Minecraft</span>
+                <span class="game-launch-chip">Overwatch</span>
+                <span class="game-launch-chip">Counter-Strike</span>
+            </div>
+            <p class="game-launch-line" data-launch-step="4">Je n'allais pas faire un portfolio sans ce côté: voici un petit démineur pour patienter.</p>
+            <div class="game-launch-progress" aria-hidden="true">
+                <span class="game-launch-bar" id="game-launch-bar"></span>
+            </div>
+            <p class="game-launch-foot">Lis tranquillement puis valide quand tu veux lancer le démineur.</p>
+            <div class="game-launch-actions">
+                <button type="button" class="game-launch-confirm" id="game-launch-confirm" disabled>Valider et jouer</button>
+            </div>
+        </div>
+    </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
@@ -2630,11 +3117,11 @@
                 projectModalDownload.href = cardFile;
                 projectModalDownload.textContent = cardFileLabel
                     ? cardFileLabel
-                    : 'Telecharger le document (PDF)';
+                    : (window.getPortfolioText ? window.getPortfolioText('projectModalDownloadDefault') : 'Télécharger le document (PDF)');
                 projectModalActions.hidden = false;
             } else if (projectModalActions && projectModalDownload) {
                 projectModalDownload.href = '#';
-                projectModalDownload.textContent = 'Telecharger le document (PDF)';
+                projectModalDownload.textContent = window.getPortfolioText ? window.getPortfolioText('projectModalDownloadDefault') : 'Télécharger le document (PDF)';
                 projectModalActions.hidden = true;
             }
 
@@ -2652,7 +3139,8 @@
 
                         const image = document.createElement('img');
                         image.src = source;
-                        image.alt = `${projectModalTitle.textContent} - vue ${index + 1}`;
+                        const galleryViewWord = window.getPortfolioText ? window.getPortfolioText('projectGalleryViewLabel') : 'vue';
+                        image.alt = `${projectModalTitle.textContent} - ${galleryViewWord} ${index + 1}`;
 
                         galleryItem.appendChild(image);
                         projectModalGallery.appendChild(galleryItem);
@@ -2678,7 +3166,7 @@
         document.querySelectorAll('#projets .project-card').forEach(card => {
             card.setAttribute('tabindex', '0');
             card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', 'Ouvrir les détails du projet');
+            card.setAttribute('aria-label', window.getPortfolioText ? window.getPortfolioText('projectCardAriaLabel') : 'Ouvrir les détails du projet');
 
             card.addEventListener('click', () => openProjectModal(card));
             card.addEventListener('keydown', (event) => {
@@ -2758,7 +3246,7 @@
         document.querySelectorAll('#projections .timeline-content').forEach(card => {
             card.setAttribute('tabindex', '0');
             card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', "Ouvrir les détails de l'objectif");
+            card.setAttribute('aria-label', window.getPortfolioText ? window.getPortfolioText('objectiveCardAriaLabel') : "Ouvrir les détails de l'objectif");
 
             card.addEventListener('click', () => openObjectiveModal(card));
             card.addEventListener('keydown', (event) => {
@@ -2785,6 +3273,214 @@
             });
         }
 
+        // Mini cinematic before opening Minesweeper
+        const gameButton = document.querySelector('.game-button');
+        const gameLaunch = document.getElementById('game-launch');
+        const gameLaunchBar = document.getElementById('game-launch-bar');
+        const gameLaunchPanel = gameLaunch ? gameLaunch.querySelector('.game-launch-panel') : null;
+        const gameLaunchLines = gameLaunch ? gameLaunch.querySelectorAll('.game-launch-line') : [];
+        const gameLaunchFavs = document.getElementById('game-launch-favs');
+        const gameLaunchConfirm = document.getElementById('game-launch-confirm');
+        let gameLaunchInProgress = false;
+        let gameLaunchTimers = [];
+        let gameLaunchDestination = '';
+
+        function clearGameLaunchTimers() {
+            gameLaunchTimers.forEach(timer => clearTimeout(timer));
+            gameLaunchTimers = [];
+        }
+
+        function setGameLaunchPhase(phase) {
+            if (!gameLaunch) return;
+            if (phase) {
+                gameLaunch.setAttribute('data-phase', phase);
+            } else {
+                gameLaunch.removeAttribute('data-phase');
+            }
+        }
+
+        function setGameLaunchReady(isReady) {
+            if (!gameLaunch) return;
+            gameLaunch.classList.toggle('ready', isReady);
+            if (gameLaunchConfirm) {
+                gameLaunchConfirm.disabled = !isReady;
+            }
+        }
+
+        function resetGameLaunchState() {
+            clearGameLaunchTimers();
+            gameLaunchInProgress = false;
+            gameLaunchDestination = '';
+
+            document.body.classList.remove('game-launch-open');
+
+            if (gameButton) {
+                gameButton.classList.remove('pressed', 'launching');
+            }
+
+            if (gameLaunch) {
+                gameLaunch.classList.remove('open');
+                gameLaunch.setAttribute('aria-hidden', 'true');
+            }
+            setGameLaunchPhase('');
+            setGameLaunchReady(false);
+
+            gameLaunchLines.forEach(line => line.classList.remove('visible'));
+
+            if (gameLaunchFavs) {
+                gameLaunchFavs.classList.remove('visible');
+            }
+
+            if (gameLaunchPanel) {
+                gameLaunchPanel.classList.remove('final-flash');
+            }
+
+            if (gameLaunchBar) {
+                gameLaunchBar.style.animation = 'none';
+                gameLaunchBar.style.width = '0%';
+            }
+        }
+
+        if (gameButton && gameLaunch) {
+            window.addEventListener('pageshow', () => {
+                resetGameLaunchState();
+            });
+
+            gameButton.addEventListener('animationend', () => {
+                gameButton.classList.remove('pressed');
+            });
+
+            gameButton.addEventListener('click', (event) => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                    return;
+                }
+                if (typeof event.button === 'number' && event.button !== 0) {
+                    return;
+                }
+
+                const destination = gameButton.getAttribute('href');
+                if (!destination) {
+                    return;
+                }
+                if (gameLaunchInProgress) {
+                    event.preventDefault();
+                    return;
+                }
+
+                event.preventDefault();
+                gameLaunchInProgress = true;
+                clearGameLaunchTimers();
+
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const launchDuration = reducedMotion ? 1000 : 3400;
+                const lineStartDelay = reducedMotion ? 0 : 260;
+                const lineInterval = reducedMotion ? 0 : 430;
+                gameLaunchDestination = destination;
+
+                document.body.classList.add('game-launch-open');
+                gameButton.classList.add('pressed', 'launching');
+                gameLaunch.classList.add('open');
+                gameLaunch.setAttribute('aria-hidden', 'false');
+                setGameLaunchPhase('boot');
+                setGameLaunchReady(false);
+
+                if (gameLaunchPanel) {
+                    gameLaunchPanel.classList.remove('final-flash');
+                }
+
+                gameLaunchLines.forEach(line => line.classList.remove('visible'));
+                if (gameLaunchFavs) {
+                    gameLaunchFavs.classList.remove('visible');
+                }
+
+                if (reducedMotion) {
+                    setGameLaunchPhase('story');
+                    gameLaunchLines.forEach(line => line.classList.add('visible'));
+                    if (gameLaunchFavs) {
+                        gameLaunchFavs.classList.add('visible');
+                    }
+                } else {
+                    const storyTimer = setTimeout(() => {
+                        setGameLaunchPhase('story');
+                    }, 220);
+                    gameLaunchTimers.push(storyTimer);
+
+                    gameLaunchLines.forEach((line, index) => {
+                        const timer = setTimeout(() => {
+                            line.classList.add('visible');
+                        }, lineStartDelay + (index * lineInterval));
+                        gameLaunchTimers.push(timer);
+                    });
+
+                    if (gameLaunchFavs) {
+                        const favsTimer = setTimeout(() => {
+                            gameLaunchFavs.classList.add('visible');
+                        }, lineStartDelay + (2 * lineInterval) + 90);
+                        gameLaunchTimers.push(favsTimer);
+                    }
+                }
+
+                if (gameLaunchBar) {
+                    gameLaunchBar.style.animation = 'none';
+                    gameLaunchBar.style.width = '0%';
+                    void gameLaunchBar.offsetWidth;
+                    if (reducedMotion) {
+                        gameLaunchBar.style.width = '100%';
+                    } else {
+                        gameLaunchBar.style.animation = `gameLaunchFill ${launchDuration - 220}ms linear forwards`;
+                    }
+                }
+
+                const readyTimer = setTimeout(() => {
+                    if (gameLaunchPanel) {
+                        gameLaunchPanel.classList.add('final-flash');
+                    }
+                    setGameLaunchPhase('ready');
+                    setGameLaunchReady(true);
+                    gameButton.classList.remove('launching');
+                    gameLaunchInProgress = false;
+                }, reducedMotion ? 140 : launchDuration);
+                gameLaunchTimers.push(readyTimer);
+            });
+
+            if (gameLaunchConfirm) {
+                gameLaunchConfirm.addEventListener('click', () => {
+                    if (!gameLaunchDestination || gameLaunchInProgress) {
+                        return;
+                    }
+
+                    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    gameLaunchInProgress = true;
+                    gameLaunchConfirm.disabled = true;
+
+                    if (gameLaunchPanel) {
+                        gameLaunchPanel.classList.remove('final-flash');
+                        void gameLaunchPanel.offsetWidth;
+                        gameLaunchPanel.classList.add('final-flash');
+                    }
+
+                    setGameLaunchPhase('warp');
+
+                    const navigateTimer = setTimeout(() => {
+                        window.location.href = gameLaunchDestination;
+                    }, reducedMotion ? 80 : 300);
+                    gameLaunchTimers.push(navigateTimer);
+                });
+            }
+
+            gameLaunch.addEventListener('click', (event) => {
+                if (event.target === gameLaunch && !gameLaunchInProgress) {
+                    resetGameLaunchState();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && gameLaunch.classList.contains('open') && !gameLaunchInProgress) {
+                    resetGameLaunchState();
+                }
+            });
+        }
+
         // Mobile Menu Toggle
         const mobileMenu = document.getElementById('mobile-menu');
         const navList = document.getElementById('nav-list');
@@ -2802,5 +3498,6 @@
             });
         });
     </script>
+    <script src="portfolio-i18n.js"></script>
 </body>
 </html>
