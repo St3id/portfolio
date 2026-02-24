@@ -889,6 +889,110 @@
             overflow: hidden;
         }
 
+        .objective-modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(10, 10, 10, 0.7);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            z-index: 2000;
+        }
+
+        .objective-modal.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .objective-modal-dialog {
+            width: min(760px, 100%);
+            max-height: 88vh;
+            background: white;
+            border-radius: 24px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.3);
+            animation: modalIn 0.25s ease;
+        }
+
+        .objective-modal-dialog::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+            z-index: 1;
+        }
+
+        .objective-modal-close {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            width: 2.4rem;
+            height: 2.4rem;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            font-size: 1.7rem;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 2;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        .objective-modal-close:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+            color: white;
+        }
+
+        .objective-modal-content {
+            padding: 2rem 2.2rem 2.2rem;
+        }
+
+        .objective-modal-date {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .objective-modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 3.5vw, 2rem);
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .objective-modal-description,
+        .objective-modal-extra {
+            color: var(--text-light);
+            line-height: 1.85;
+        }
+
+        .objective-modal-description {
+            margin-bottom: 1.1rem;
+        }
+
+        .objective-modal-extra {
+            padding: 0.9rem 1rem;
+            border-left: 3px solid var(--accent);
+            background: #fff8f5;
+            border-radius: 8px;
+        }
+
         /* Projections Timeline */
         #projections {
             background: 
@@ -932,11 +1036,17 @@
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .timeline-content:hover {
             transform: scale(1.03);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .timeline-content:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
         }
 
         .timeline-dot {
@@ -1302,6 +1412,36 @@
 
             .project-modal-description,
             .project-modal-extra {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+
+            .objective-modal {
+                padding: 0.8rem;
+            }
+
+            .objective-modal-dialog {
+                border-radius: 18px;
+            }
+
+            .objective-modal-content {
+                padding: 1.2rem;
+            }
+
+            .objective-modal-title {
+                font-size: 1.25rem;
+            }
+
+            .objective-modal-date {
+                font-size: 0.72rem;
+            }
+
+            .objective-modal-description {
+                font-size: 0.85rem;
+                line-height: 1.65;
+            }
+
+            .objective-modal-extra {
                 font-size: 0.85rem;
                 line-height: 1.6;
             }
@@ -1770,6 +1910,18 @@
         </div>
     </section>
 
+    <div class="objective-modal" id="objective-modal" aria-hidden="true">
+        <div class="objective-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="objective-modal-title">
+            <button id="objective-modal-close" class="objective-modal-close" type="button" aria-label="Fermer la popup">&times;</button>
+            <div class="objective-modal-content">
+                <div id="objective-modal-date" class="objective-modal-date"></div>
+                <h3 id="objective-modal-title" class="objective-modal-title"></h3>
+                <p id="objective-modal-description" class="objective-modal-description"></p>
+                <p id="objective-modal-extra" class="objective-modal-extra" hidden></p>
+            </div>
+        </div>
+    </div>
+
     <section id="liens">
         <div class="container">
             <h2>Me Contacter</h2>
@@ -2050,6 +2202,86 @@
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape' && projectModal.classList.contains('open')) {
                     closeProjectModal();
+                }
+            });
+        }
+
+        // Objective Modal
+        const objectiveModal = document.getElementById('objective-modal');
+        const objectiveModalClose = document.getElementById('objective-modal-close');
+        const objectiveModalDate = document.getElementById('objective-modal-date');
+        const objectiveModalTitle = document.getElementById('objective-modal-title');
+        const objectiveModalDescription = document.getElementById('objective-modal-description');
+        const objectiveModalExtra = document.getElementById('objective-modal-extra');
+        let lastFocusedObjective = null;
+
+        function closeObjectiveModal() {
+            if (!objectiveModal) return;
+            objectiveModal.classList.remove('open');
+            objectiveModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+
+            if (lastFocusedObjective) {
+                lastFocusedObjective.focus();
+                lastFocusedObjective = null;
+            }
+        }
+
+        function openObjectiveModal(card) {
+            if (!objectiveModal) return;
+
+            const itemDate = card.querySelector('.timeline-date');
+            const itemTitle = card.querySelector('.timeline-title');
+            const itemDescription = card.querySelector('.timeline-description');
+            const itemExtra = card.getAttribute('data-modal-details');
+
+            objectiveModalDate.textContent = itemDate ? itemDate.textContent.trim() : '';
+            objectiveModalTitle.textContent = itemTitle ? itemTitle.textContent.trim() : '';
+            objectiveModalDescription.textContent = itemDescription
+                ? itemDescription.textContent.replace(/\s+/g, ' ').trim()
+                : '';
+
+            if (itemExtra) {
+                objectiveModalExtra.textContent = itemExtra;
+                objectiveModalExtra.hidden = false;
+            } else {
+                objectiveModalExtra.textContent = '';
+                objectiveModalExtra.hidden = true;
+            }
+
+            lastFocusedObjective = card;
+            objectiveModal.classList.add('open');
+            objectiveModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            objectiveModalClose.focus();
+        }
+
+        document.querySelectorAll('#projections .timeline-content').forEach(card => {
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', 'Ouvrir les details de l objectif');
+
+            card.addEventListener('click', () => openObjectiveModal(card));
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openObjectiveModal(card);
+                }
+            });
+        });
+
+        if (objectiveModal && objectiveModalClose) {
+            objectiveModalClose.addEventListener('click', closeObjectiveModal);
+
+            objectiveModal.addEventListener('click', (event) => {
+                if (event.target === objectiveModal) {
+                    closeObjectiveModal();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && objectiveModal.classList.contains('open')) {
+                    closeObjectiveModal();
                 }
             });
         }
