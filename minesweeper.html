@@ -75,6 +75,12 @@
             background-clip: text;
         }
 
+        #gameHeading {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
         .subtitle {
             text-align: center;
             color: var(--text-light);
@@ -196,6 +202,15 @@
         .cell.mine {
             background: linear-gradient(145deg, #ff6b35, #ff5722);
             color: white;
+        }
+
+        .cell.mine-preview:not(.revealed) {
+            background: linear-gradient(145deg, #fff3d6, #ffe7b8);
+            box-shadow: inset 0 0 0 2px rgba(255, 107, 53, 0.65), 0 2px 4px rgba(0, 0, 0, 0.12);
+        }
+
+        .cell.mine-preview.flagged {
+            box-shadow: inset 0 0 0 2px rgba(255, 107, 53, 0.8), 0 2px 4px rgba(0, 0, 0, 0.12);
         }
 
         .cell.num-1 { color: #0066ff; }
@@ -633,7 +648,7 @@
                 </div>
                 <div class="info-item">
                     <span>⏱️</span>
-                    <span><span id="timeLabel">Temps</span>: <span id="timer">0</span>s</span>
+                    <span><span id="timeLabel">Temps</span>: <span id="timer">00:00</span></span>
                 </div>
             </div>
             <div class="difficulty">
@@ -713,7 +728,7 @@
                 diffHard: 'Difficile',
                 statusHint: 'Clic gauche: révéler | Clic droit: drapeau',
                 statusLose: '💥 Game Over ! Vous avez touché une mine !',
-                statusWin: '🎉 Victoire ! Temps: {time}s',
+                statusWin: '🎉 Victoire ! Temps: {time}',
                 newGameButton: 'Nouvelle Partie',
                 instructionsHtml:
                     '<strong>Comment jouer:</strong><br>' +
@@ -728,9 +743,9 @@
                 modalNewGameButton: 'Nouvelle partie',
                 modalCloseButton: 'Fermer',
                 modalLoseTitle: '💥 Défaite',
-                modalLoseMessage: 'Vous avez touché une mine après {time}s.',
+                modalLoseMessage: 'Vous avez touché une mine après {time}.',
                 modalWinTitle: '🎉 Victoire',
-                modalWinMessage: 'Temps: {time}s. Mines bien drapées, grille nettoyée.'
+                modalWinMessage: 'Temps: {time}. Mines bien drapées, grille nettoyée.'
             },
             en: {
                 pageTitle: 'Minesweeper - Lucas BOLES',
@@ -745,7 +760,7 @@
                 diffHard: 'Hard',
                 statusHint: 'Left click: reveal | Right click: flag',
                 statusLose: '💥 Game Over! You hit a mine!',
-                statusWin: '🎉 Victory! Time: {time}s',
+                statusWin: '🎉 Victory! Time: {time}',
                 newGameButton: 'New Game',
                 instructionsHtml:
                     '<strong>How to play:</strong><br>' +
@@ -760,9 +775,9 @@
                 modalNewGameButton: 'New game',
                 modalCloseButton: 'Close',
                 modalLoseTitle: '💥 Defeat',
-                modalLoseMessage: 'You hit a mine after {time}s.',
+                modalLoseMessage: 'You hit a mine after {time}.',
                 modalWinTitle: '🎉 Victory',
-                modalWinMessage: 'Time: {time}s. Mines correctly flagged, board cleared.'
+                modalWinMessage: 'Time: {time}. Mines correctly flagged, board cleared.'
             }
         };
 
@@ -803,6 +818,10 @@
         let endModalState = null;
         const MOUSE_DRAG_THRESHOLD = 4;
         const SUPPRESS_CLICK_DELAY = 200;
+        const EASTER_EGG_TRIGGER_CLICKS = 20;
+        let easterEggHeadingClickCount = 0;
+        let minePreviewArmedForNextGame = false;
+        let minePreviewActive = false;
 
         function startGridDrag(touch) {
             if (!gridWrapperEl) return;
@@ -880,22 +899,42 @@
             });
         }
 
+        function formatElapsedTime(totalSeconds) {
+            const safeSeconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+            const seconds = safeSeconds % 60;
+            const totalMinutes = Math.floor(safeSeconds / 60);
+            const minutes = totalMinutes % 60;
+            const hours = Math.floor(totalMinutes / 60);
+            const pad2 = (value) => String(value).padStart(2, '0');
+
+            if (hours > 0) {
+                return `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`;
+            }
+            return `${pad2(totalMinutes)}:${pad2(seconds)}`;
+        }
+
+        function renderTimer() {
+            if (timerEl) {
+                timerEl.textContent = formatElapsedTime(timer);
+            }
+        }
+
         function getLoseStatusText() {
             return t('statusLose');
         }
 
         function getWinStatusText() {
-            return formatTemplate(t('statusWin'), { time: timer });
+            return formatTemplate(t('statusWin'), { time: formatElapsedTime(timer) });
         }
 
         function getLoseModalMessage() {
             const modalTime = endModalState && typeof endModalState.time === 'number' ? endModalState.time : timer;
-            return formatTemplate(t('modalLoseMessage'), { time: modalTime });
+            return formatTemplate(t('modalLoseMessage'), { time: formatElapsedTime(modalTime) });
         }
 
         function getWinModalMessage() {
             const modalTime = endModalState && typeof endModalState.time === 'number' ? endModalState.time : timer;
-            return formatTemplate(t('modalWinMessage'), { time: modalTime });
+            return formatTemplate(t('modalWinMessage'), { time: formatElapsedTime(modalTime) });
         }
 
         function applyLanguage(language) {
@@ -916,6 +955,7 @@
             if (instructionsBlockEl) instructionsBlockEl.innerHTML = t('instructionsHtml');
             if (endModalNewGameBtn) endModalNewGameBtn.textContent = t('modalNewGameButton');
             if (endModalCloseBtn) endModalCloseBtn.textContent = t('modalCloseButton');
+            renderTimer();
 
             if (gameWon) {
                 statusEl.textContent = getWinStatusText();
@@ -997,6 +1037,13 @@
             } else if (endModalState.type === 'lose') {
                 openEndModal('lose', t('modalLoseTitle'), getLoseModalMessage());
             }
+        }
+
+        function handleHeadingEasterEggClick() {
+            easterEggHeadingClickCount++;
+            if (easterEggHeadingClickCount < EASTER_EGG_TRIGGER_CLICKS) return;
+            minePreviewArmedForNextGame = true;
+            easterEggHeadingClickCount = 0;
         }
 
         const difficulties = {
@@ -1156,9 +1203,11 @@
             lastTouchTime = 0;
             suppressClickUntil = 0;
             timer = 0;
-            timerEl.textContent = timer;
+            renderTimer();
             gameOver = false;
             gameWon = false;
+            minePreviewActive = minePreviewArmedForNextGame;
+            minePreviewArmedForNextGame = false;
             revealedCount = 0;
             flagCount = 0;
             firstClick = true;
@@ -1262,6 +1311,7 @@
                     cell.dataset.x = String(x);
                     cell.dataset.y = String(y);
                     const data = grid[y][x];
+                    const showMinePreview = minePreviewActive && !firstClick && !gameOver && !gameWon && data.isMine && !data.isRevealed;
 
                     if (data.isRevealed) {
                         cell.classList.add('revealed');
@@ -1275,6 +1325,10 @@
                     } else if (data.isFlagged) {
                         cell.classList.add('flagged');
                         cell.textContent = '🚩';
+                    }
+
+                    if (showMinePreview) {
+                        cell.classList.add('mine-preview');
                     }
 
                     cell.addEventListener('click', (e) => {
@@ -1299,7 +1353,7 @@
             if (timerInterval !== null) return;
             timerInterval = setInterval(() => {
                 timer++;
-                timerEl.textContent = timer;
+                renderTimer();
             }, 1000);
         }
 
@@ -1327,6 +1381,7 @@
                 gameOver = true;
                 clearInterval(timerInterval);
                 timerInterval = null;
+                minePreviewActive = false;
                 revealAllMines();
                 statusEl.textContent = getLoseStatusText();
                 statusEl.className = 'status lose';
@@ -1405,10 +1460,16 @@
             gameWon = true;
             clearInterval(timerInterval);
             timerInterval = null;
+            minePreviewActive = false;
+            renderGrid();
             statusEl.textContent = getWinStatusText();
             statusEl.className = 'status win';
             endModalState = { type: 'win', time: timer };
             openEndModal('win', t('modalWinTitle'), getWinModalMessage());
+        }
+
+        if (gameHeadingEl) {
+            gameHeadingEl.addEventListener('click', handleHeadingEasterEggClick);
         }
 
         gridEl.addEventListener('mousedown', handleGridMouseDown);
