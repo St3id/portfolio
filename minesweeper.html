@@ -819,9 +819,11 @@
         let endModalState = null;
         const MOUSE_DRAG_THRESHOLD = 4;
         const SUPPRESS_CLICK_DELAY = 200;
-        const EASTER_EGG_TRIGGER_CLICKS = 20;
+        const EASTER_EGG_TRIGGER_CLICKS = 30;
+        const EASTER_EGG_CLICK_TIMEOUT_MS = 2000;
         const HEADING_CLICK_SUPPRESS_DELAY = 500;
         let easterEggHeadingClickCount = 0;
+        let easterEggHeadingLastTapAt = 0;
         let minePreviewArmedForNextGame = false;
         let minePreviewActive = false;
         let suppressHeadingClickUntil = 0;
@@ -1043,10 +1045,21 @@
         }
 
         function activateHeadingEasterEggTap() {
+            const now = Date.now();
+            if (
+                easterEggHeadingClickCount > 0 &&
+                easterEggHeadingClickCount < EASTER_EGG_TRIGGER_CLICKS &&
+                now - easterEggHeadingLastTapAt >= EASTER_EGG_CLICK_TIMEOUT_MS
+            ) {
+                easterEggHeadingClickCount = 0;
+            }
+
+            easterEggHeadingLastTapAt = now;
             easterEggHeadingClickCount++;
             if (easterEggHeadingClickCount < EASTER_EGG_TRIGGER_CLICKS) return;
             minePreviewArmedForNextGame = true;
             easterEggHeadingClickCount = 0;
+            easterEggHeadingLastTapAt = 0;
         }
 
         function handleHeadingEasterEggClick() {
