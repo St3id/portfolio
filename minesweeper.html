@@ -944,12 +944,35 @@
             }
         }
 
-        function closeEndModal() {
+        function closeEndModal(options) {
+            const settings = options || {};
             if (!endModalEl) return;
             endModalEl.classList.remove('open', 'win', 'lose');
-            endModalState = null;
-            if (endModalTitleEl) endModalTitleEl.textContent = t('modalDefaultTitle');
-            if (endModalMessageEl) endModalMessageEl.textContent = '';
+            if (settings.clearState) {
+                endModalState = null;
+            }
+            if (endModalTitleEl) {
+                if (settings.clearState) {
+                    endModalTitleEl.textContent = t('modalDefaultTitle');
+                } else if (endModalState && endModalState.type === 'win') {
+                    endModalTitleEl.textContent = t('modalWinTitle');
+                } else if (endModalState && endModalState.type === 'lose') {
+                    endModalTitleEl.textContent = t('modalLoseTitle');
+                } else {
+                    endModalTitleEl.textContent = t('modalDefaultTitle');
+                }
+            }
+            if (endModalMessageEl) {
+                if (settings.clearState) {
+                    endModalMessageEl.textContent = '';
+                } else if (endModalState && endModalState.type === 'win') {
+                    endModalMessageEl.textContent = getWinModalMessage();
+                } else if (endModalState && endModalState.type === 'lose') {
+                    endModalMessageEl.textContent = getLoseModalMessage();
+                } else {
+                    endModalMessageEl.textContent = '';
+                }
+            }
             endModalEl.setAttribute('aria-hidden', 'true');
         }
 
@@ -963,6 +986,17 @@
             endModalTitleEl.textContent = title;
             endModalMessageEl.textContent = message;
             endModalEl.setAttribute('aria-hidden', 'false');
+        }
+
+        function reopenEndModalIfNeeded() {
+            if (!endModalEl || !endModalState) return;
+            if (endModalEl.classList.contains('open')) return;
+
+            if (endModalState.type === 'win') {
+                openEndModal('win', t('modalWinTitle'), getWinModalMessage());
+            } else if (endModalState.type === 'lose') {
+                openEndModal('lose', t('modalLoseTitle'), getLoseModalMessage());
+            }
         }
 
         const difficulties = {
@@ -1115,7 +1149,7 @@
             clearTouchPressTimer();
             isGridDragging = false;
             stopMouseGridDrag();
-            closeEndModal();
+            closeEndModal({ clearState: true });
             touchLongPressTriggered = false;
             activeTouchCellX = null;
             activeTouchCellY = null;
@@ -1270,7 +1304,10 @@
         }
 
         function revealCell(x, y) {
-            if (gameOver || gameWon) return;
+            if (gameOver || gameWon) {
+                reopenEndModalIfNeeded();
+                return;
+            }
 
             const cell = grid[y][x];
             if (cell.isRevealed || cell.isFlagged) return;
@@ -1319,7 +1356,10 @@
         }
 
         function toggleFlag(x, y) {
-            if (gameOver || gameWon) return;
+            if (gameOver || gameWon) {
+                reopenEndModalIfNeeded();
+                return;
+            }
 
             const cell = grid[y][x];
             if (cell.isRevealed) return;
@@ -1383,13 +1423,13 @@
         }
         if (endModalCloseBtn) {
             endModalCloseBtn.addEventListener('click', () => {
-                closeEndModal();
+                closeEndModal({ clearState: false });
             });
         }
         if (endModalEl) {
             endModalEl.addEventListener('click', (e) => {
                 if (e.target === endModalEl) {
-                    closeEndModal();
+                    closeEndModal({ clearState: false });
                 }
             });
         }
