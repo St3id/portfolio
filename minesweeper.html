@@ -142,12 +142,14 @@
         }
 
         .grid {
-            display: inline-grid;
+            display: grid;
+            width: max-content;
             gap: 2px;
             background: var(--border);
             border: 3px solid var(--border);
             border-radius: 10px;
             padding: 2px;
+            margin: 0 auto;
         }
 
         .cell {
@@ -184,6 +186,7 @@
             background: white;
             cursor: default;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            touch-action: none;
         }
 
         .cell.flagged {
@@ -242,6 +245,88 @@
             color: #e74c3c;
         }
 
+        .end-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 3000;
+        }
+
+        .end-modal.open {
+            display: flex;
+        }
+
+        .end-modal-card {
+            width: min(430px, 100%);
+            background: white;
+            border-radius: 18px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        .end-modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            line-height: 1.1;
+            margin-bottom: 0.8rem;
+            color: var(--text);
+        }
+
+        .end-modal.win .end-modal-title {
+            color: #2ecc71;
+        }
+
+        .end-modal.lose .end-modal-title {
+            color: #e74c3c;
+        }
+
+        .end-modal-message {
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .end-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 0.8rem 1.2rem;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #ff5722;
+        }
+
+        .modal-btn.secondary {
+            background: #efefea;
+            color: var(--text);
+        }
+
+        .modal-btn.secondary:hover {
+            background: #e4e4dc;
+        }
+
         .instructions {
             margin-top: 2rem;
             padding: 1.5rem;
@@ -257,10 +342,11 @@
         }
 
         .grid-wrapper {
-            overflow-x: auto;
-            display: flex;
-            justify-content: center;
+            overflow: auto;
+            width: 100%;
             margin-bottom: 2rem;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
 
         @media (max-width: 768px) {
@@ -529,31 +615,31 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-button">← Retour</a>
+    <a href="index.html" class="back-button" id="backButton">← Retour</a>
     
     <div class="container">
-        <h1>💣 Démineur</h1>
-        <p class="subtitle">Trouve toutes les cases sans toucher les mines</p>
+        <h1 id="gameHeading">💣 Démineur</h1>
+        <p class="subtitle" id="gameSubtitle">Trouve toutes les cases sans toucher les mines</p>
 
         <div class="controls">
             <div class="info">
                 <div class="info-item">
                     <span>💣</span>
-                    <span>Mines: <span id="mineCount">10</span></span>
+                    <span><span id="mineLabel">Mines</span>: <span id="mineCount">10</span></span>
                 </div>
                 <div class="info-item">
                     <span>🚩</span>
-                    <span>Drapeaux: <span id="flagCount">0</span></span>
+                    <span><span id="flagLabel">Drapeaux</span>: <span id="flagCount">0</span></span>
                 </div>
                 <div class="info-item">
                     <span>⏱️</span>
-                    <span>Temps: <span id="timer">0</span>s</span>
+                    <span><span id="timeLabel">Temps</span>: <span id="timer">0</span>s</span>
                 </div>
             </div>
             <div class="difficulty">
-                <button class="diff-btn active" data-diff="easy">Facile</button>
-                <button class="diff-btn" data-diff="medium">Moyen</button>
-                <button class="diff-btn" data-diff="hard">Difficile</button>
+                <button class="diff-btn active" data-diff="easy" id="diffEasyBtn">Facile</button>
+                <button class="diff-btn" data-diff="medium" id="diffMediumBtn">Moyen</button>
+                <button class="diff-btn" data-diff="hard" id="diffHardBtn">Difficile</button>
             </div>
         </div>
 
@@ -563,24 +649,122 @@
 
         <div class="status" id="status">Clic gauche: révéler | Clic droit: drapeau</div>
 
-        <button class="btn-new" onclick="initGame()">Nouvelle Partie</button>
+        <button class="btn-new" id="newGameButton" onclick="initGame()">Nouvelle Partie</button>
 
-        <div class="instructions">
+        <div class="instructions" id="instructionsBlock">
             <strong>Comment jouer:</strong><br>
             • <strong>Clic gauche</strong> pour révéler une case<br>
             • <strong>Clic droit</strong> pour placer/retirer un drapeau 🚩<br>
-            • Sur mobile: <strong>tap court</strong> pour révéler, <strong>appui long</strong> pour drapeau<br>
+            • Sur mobile: <strong>tap court</strong> pour révéler, <strong>appui long</strong> pour drapeau, <strong>glisser sur une case découverte</strong> pour naviguer<br>
+            • Sur bureau: <strong>cliquer-glisser depuis une case découverte</strong> pour naviguer dans la grille<br>
+            • <strong>Victoire:</strong> toutes les mines doivent être drapées ET toutes les autres cases révélées<br>
             • Les chiffres indiquent le nombre de mines adjacentes<br>
             • Le premier clic ne peut jamais être une mine !
         </div>
     </div>
 
+    <div class="end-modal" id="endModal" aria-hidden="true">
+        <div class="end-modal-card" role="dialog" aria-modal="true" aria-labelledby="endModalTitle">
+            <h2 class="end-modal-title" id="endModalTitle">Fin de partie</h2>
+            <p class="end-modal-message" id="endModalMessage"></p>
+            <div class="end-modal-actions">
+                <button type="button" class="modal-btn primary" id="endModalNewGameBtn">Nouvelle partie</button>
+                <button type="button" class="modal-btn secondary" id="endModalCloseBtn">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const gridEl = document.getElementById('grid');
+        const gridWrapperEl = document.querySelector('.grid-wrapper');
+        const backButtonEl = document.getElementById('backButton');
+        const gameHeadingEl = document.getElementById('gameHeading');
+        const gameSubtitleEl = document.getElementById('gameSubtitle');
+        const mineLabelEl = document.getElementById('mineLabel');
+        const flagLabelEl = document.getElementById('flagLabel');
+        const timeLabelEl = document.getElementById('timeLabel');
         const mineCountEl = document.getElementById('mineCount');
         const flagCountEl = document.getElementById('flagCount');
         const timerEl = document.getElementById('timer');
         const statusEl = document.getElementById('status');
+        const newGameButtonEl = document.getElementById('newGameButton');
+        const instructionsBlockEl = document.getElementById('instructionsBlock');
+        const diffEasyBtnEl = document.getElementById('diffEasyBtn');
+        const diffMediumBtnEl = document.getElementById('diffMediumBtn');
+        const diffHardBtnEl = document.getElementById('diffHardBtn');
+        const endModalEl = document.getElementById('endModal');
+        const endModalTitleEl = document.getElementById('endModalTitle');
+        const endModalMessageEl = document.getElementById('endModalMessage');
+        const endModalNewGameBtn = document.getElementById('endModalNewGameBtn');
+        const endModalCloseBtn = document.getElementById('endModalCloseBtn');
+
+        const LANGUAGE_STORAGE_KEY = 'portfolio-language';
+        const i18n = {
+            fr: {
+                pageTitle: 'Démineur - Lucas BOLES',
+                backButton: '← Retour',
+                heading: '💣 Démineur',
+                subtitle: 'Trouve toutes les cases sans toucher les mines',
+                mineLabel: 'Mines',
+                flagLabel: 'Drapeaux',
+                timeLabel: 'Temps',
+                diffEasy: 'Facile',
+                diffMedium: 'Moyen',
+                diffHard: 'Difficile',
+                statusHint: 'Clic gauche: révéler | Clic droit: drapeau',
+                statusLose: '💥 Game Over ! Vous avez touché une mine !',
+                statusWin: '🎉 Victoire ! Temps: {time}s',
+                newGameButton: 'Nouvelle Partie',
+                instructionsHtml:
+                    '<strong>Comment jouer:</strong><br>' +
+                    '• <strong>Clic gauche</strong> pour révéler une case<br>' +
+                    '• <strong>Clic droit</strong> pour placer/retirer un drapeau 🚩<br>' +
+                    '• Sur mobile: <strong>tap court</strong> pour révéler, <strong>appui long</strong> pour drapeau, <strong>glisser sur une case découverte</strong> pour naviguer<br>' +
+                    '• Sur bureau: <strong>cliquer-glisser depuis une case découverte</strong> pour naviguer dans la grille<br>' +
+                    '• <strong>Victoire:</strong> toutes les mines doivent être drapées ET toutes les autres cases révélées<br>' +
+                    '• Les chiffres indiquent le nombre de mines adjacentes<br>' +
+                    '• Le premier clic ne peut jamais être une mine !',
+                modalDefaultTitle: 'Fin de partie',
+                modalNewGameButton: 'Nouvelle partie',
+                modalCloseButton: 'Fermer',
+                modalLoseTitle: '💥 Défaite',
+                modalLoseMessage: 'Vous avez touché une mine après {time}s.',
+                modalWinTitle: '🎉 Victoire',
+                modalWinMessage: 'Temps: {time}s. Mines bien drapées, grille nettoyée.'
+            },
+            en: {
+                pageTitle: 'Minesweeper - Lucas BOLES',
+                backButton: '← Back',
+                heading: '💣 Minesweeper',
+                subtitle: 'Find all safe cells without hitting mines',
+                mineLabel: 'Mines',
+                flagLabel: 'Flags',
+                timeLabel: 'Time',
+                diffEasy: 'Easy',
+                diffMedium: 'Medium',
+                diffHard: 'Hard',
+                statusHint: 'Left click: reveal | Right click: flag',
+                statusLose: '💥 Game Over! You hit a mine!',
+                statusWin: '🎉 Victory! Time: {time}s',
+                newGameButton: 'New Game',
+                instructionsHtml:
+                    '<strong>How to play:</strong><br>' +
+                    '• <strong>Left click</strong> to reveal a cell<br>' +
+                    '• <strong>Right click</strong> to place/remove a flag 🚩<br>' +
+                    '• On mobile: <strong>short tap</strong> to reveal, <strong>long press</strong> to flag, <strong>drag on a revealed cell</strong> to move around<br>' +
+                    '• On desktop: <strong>click-drag from a revealed cell</strong> to move around the grid<br>' +
+                    '• <strong>Victory:</strong> all mines must be flagged AND all other cells revealed<br>' +
+                    '• Numbers indicate the count of adjacent mines<br>' +
+                    '• The first click can never be a mine!',
+                modalDefaultTitle: 'Game over',
+                modalNewGameButton: 'New game',
+                modalCloseButton: 'Close',
+                modalLoseTitle: '💥 Defeat',
+                modalLoseMessage: 'You hit a mine after {time}s.',
+                modalWinTitle: '🎉 Victory',
+                modalWinMessage: 'Time: {time}s. Mines correctly flagged, board cleared.'
+            }
+        };
 
         let difficulty = 'easy';
         let gridSize = 9;
@@ -596,7 +780,190 @@
         let touchPressTimer = null;
         let touchStartX = 0;
         let touchStartY = 0;
-        let isTouchEvent = false;
+        let touchLongPressTriggered = false;
+        let lastTouchTime = 0;
+        const TOUCH_MOVE_THRESHOLD = 10;
+        const LONG_PRESS_DELAY = 500;
+        const GHOST_CLICK_DELAY = 700;
+        let isGridDragging = false;
+        let gridDragStartX = 0;
+        let gridDragStartY = 0;
+        let gridDragStartScrollLeft = 0;
+        let gridDragStartScrollTop = 0;
+        let activeTouchCellX = null;
+        let activeTouchCellY = null;
+        let isMouseDragging = false;
+        let mouseDragHasMoved = false;
+        let mouseDragStartX = 0;
+        let mouseDragStartY = 0;
+        let mouseDragStartScrollLeft = 0;
+        let mouseDragStartScrollTop = 0;
+        let suppressClickUntil = 0;
+        let currentLanguage = 'fr';
+        let endModalState = null;
+        const MOUSE_DRAG_THRESHOLD = 4;
+        const SUPPRESS_CLICK_DELAY = 200;
+
+        function startGridDrag(touch) {
+            if (!gridWrapperEl) return;
+            isGridDragging = true;
+            gridDragStartX = touch.clientX;
+            gridDragStartY = touch.clientY;
+            gridDragStartScrollLeft = gridWrapperEl.scrollLeft;
+            gridDragStartScrollTop = gridWrapperEl.scrollTop;
+        }
+
+        function startMouseGridDrag(clientX, clientY) {
+            if (!gridWrapperEl) return;
+            isMouseDragging = true;
+            mouseDragHasMoved = false;
+            mouseDragStartX = clientX;
+            mouseDragStartY = clientY;
+            mouseDragStartScrollLeft = gridWrapperEl.scrollLeft;
+            mouseDragStartScrollTop = gridWrapperEl.scrollTop;
+        }
+
+        function stopMouseGridDrag() {
+            if (!isMouseDragging) return;
+            if (mouseDragHasMoved) {
+                suppressClickUntil = Date.now() + SUPPRESS_CLICK_DELAY;
+            }
+            isMouseDragging = false;
+            mouseDragHasMoved = false;
+        }
+
+        function clearTouchPressTimer() {
+            if (touchPressTimer !== null) {
+                clearTimeout(touchPressTimer);
+                touchPressTimer = null;
+            }
+        }
+
+        function getCellCoordsFromTarget(target) {
+            const targetEl = target instanceof Element ? target : target?.parentElement;
+            if (!targetEl) return null;
+
+            const cellEl = targetEl.closest('.cell');
+            if (!cellEl || !gridEl.contains(cellEl)) return null;
+
+            const x = Number(cellEl.dataset.x);
+            const y = Number(cellEl.dataset.y);
+            if (!Number.isInteger(x) || !Number.isInteger(y)) return null;
+
+            return { x, y };
+        }
+
+        function getStoredLanguage() {
+            try {
+                const storedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+                if (storedLanguage === 'en' || storedLanguage === 'fr') {
+                    return storedLanguage;
+                }
+            } catch (error) {
+                // Ignore storage failures when unavailable.
+            }
+            return document.documentElement.getAttribute('lang') === 'en' ? 'en' : 'fr';
+        }
+
+        function t(key) {
+            const dictionary = i18n[currentLanguage] || i18n.fr;
+            if (Object.prototype.hasOwnProperty.call(dictionary, key)) {
+                return dictionary[key];
+            }
+            return i18n.fr[key] || '';
+        }
+
+        function formatTemplate(template, values) {
+            if (typeof template !== 'string') return '';
+            return template.replace(/\{(\w+)\}/g, (match, key) => {
+                return Object.prototype.hasOwnProperty.call(values, key) ? String(values[key]) : match;
+            });
+        }
+
+        function getLoseStatusText() {
+            return t('statusLose');
+        }
+
+        function getWinStatusText() {
+            return formatTemplate(t('statusWin'), { time: timer });
+        }
+
+        function getLoseModalMessage() {
+            const modalTime = endModalState && typeof endModalState.time === 'number' ? endModalState.time : timer;
+            return formatTemplate(t('modalLoseMessage'), { time: modalTime });
+        }
+
+        function getWinModalMessage() {
+            const modalTime = endModalState && typeof endModalState.time === 'number' ? endModalState.time : timer;
+            return formatTemplate(t('modalWinMessage'), { time: modalTime });
+        }
+
+        function applyLanguage(language) {
+            currentLanguage = language === 'en' ? 'en' : 'fr';
+            document.documentElement.setAttribute('lang', currentLanguage);
+            document.title = t('pageTitle');
+
+            if (backButtonEl) backButtonEl.textContent = t('backButton');
+            if (gameHeadingEl) gameHeadingEl.textContent = t('heading');
+            if (gameSubtitleEl) gameSubtitleEl.textContent = t('subtitle');
+            if (mineLabelEl) mineLabelEl.textContent = t('mineLabel');
+            if (flagLabelEl) flagLabelEl.textContent = t('flagLabel');
+            if (timeLabelEl) timeLabelEl.textContent = t('timeLabel');
+            if (diffEasyBtnEl) diffEasyBtnEl.textContent = t('diffEasy');
+            if (diffMediumBtnEl) diffMediumBtnEl.textContent = t('diffMedium');
+            if (diffHardBtnEl) diffHardBtnEl.textContent = t('diffHard');
+            if (newGameButtonEl) newGameButtonEl.textContent = t('newGameButton');
+            if (instructionsBlockEl) instructionsBlockEl.innerHTML = t('instructionsHtml');
+            if (endModalNewGameBtn) endModalNewGameBtn.textContent = t('modalNewGameButton');
+            if (endModalCloseBtn) endModalCloseBtn.textContent = t('modalCloseButton');
+
+            if (gameWon) {
+                statusEl.textContent = getWinStatusText();
+                statusEl.className = 'status win';
+            } else if (gameOver) {
+                statusEl.textContent = getLoseStatusText();
+                statusEl.className = 'status lose';
+            } else {
+                statusEl.textContent = t('statusHint');
+                statusEl.className = 'status';
+            }
+
+            if (!endModalEl) return;
+            if (!endModalEl.classList.contains('open')) {
+                if (endModalTitleEl) endModalTitleEl.textContent = t('modalDefaultTitle');
+                if (endModalMessageEl) endModalMessageEl.textContent = '';
+                return;
+            }
+
+            if (endModalState && endModalState.type === 'win') {
+                openEndModal('win', t('modalWinTitle'), getWinModalMessage());
+            } else if (endModalState && endModalState.type === 'lose') {
+                openEndModal('lose', t('modalLoseTitle'), getLoseModalMessage());
+            } else {
+                openEndModal('', t('modalDefaultTitle'), '');
+            }
+        }
+
+        function closeEndModal() {
+            if (!endModalEl) return;
+            endModalEl.classList.remove('open', 'win', 'lose');
+            endModalState = null;
+            if (endModalTitleEl) endModalTitleEl.textContent = t('modalDefaultTitle');
+            if (endModalMessageEl) endModalMessageEl.textContent = '';
+            endModalEl.setAttribute('aria-hidden', 'true');
+        }
+
+        function openEndModal(type, title, message) {
+            if (!endModalEl || !endModalTitleEl || !endModalMessageEl) return;
+            endModalEl.classList.remove('win', 'lose');
+            if (type === 'win' || type === 'lose') {
+                endModalEl.classList.add(type);
+            }
+            endModalEl.classList.add('open');
+            endModalTitleEl.textContent = title;
+            endModalMessageEl.textContent = message;
+            endModalEl.setAttribute('aria-hidden', 'false');
+        }
 
         const difficulties = {
             easy: { size: 9, mines: 10 },
@@ -604,34 +971,130 @@
             hard: { size: 22, mines: 99 }
         };
 
-        function handleCellTouchStart(e, x, y) {
-            isTouchEvent = true;
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+        function handleGridTouchStart(e) {
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            const coords = getCellCoordsFromTarget(e.target);
+            if (!coords) return;
+
+            lastTouchTime = Date.now();
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchLongPressTriggered = false;
+            activeTouchCellX = coords.x;
+            activeTouchCellY = coords.y;
+
+            if (grid[coords.y][coords.x].isRevealed) {
+                clearTouchPressTimer();
+                startGridDrag(touch);
+                return;
+            }
+
+            clearTouchPressTimer();
 
             touchPressTimer = setTimeout(() => {
-                toggleFlag(x, y);
+                if (activeTouchCellX === null || activeTouchCellY === null) return;
+                touchLongPressTriggered = true;
+                toggleFlag(activeTouchCellX, activeTouchCellY);
                 touchPressTimer = null;
-            }, 500);
+                lastTouchTime = Date.now();
+            }, LONG_PRESS_DELAY);
         }
 
-        function handleCellTouchEnd(e, x, y) {
-            if (touchPressTimer !== null) {
-                clearTimeout(touchPressTimer);
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-                const distX = Math.abs(touchEndX - touchStartX);
-                const distY = Math.abs(touchEndY - touchStartY);
+        function handleGridTouchMove(e) {
+            const touch = e.touches[0];
+            if (!touch) return;
 
-                if (distX < 10 && distY < 10) {
-                    revealCell(x, y);
-                }
-                touchPressTimer = null;
+            if (isGridDragging) {
+                if (!gridWrapperEl) return;
+                e.preventDefault();
+                const dragX = touch.clientX - gridDragStartX;
+                const dragY = touch.clientY - gridDragStartY;
+                gridWrapperEl.scrollLeft = gridDragStartScrollLeft - dragX;
+                gridWrapperEl.scrollTop = gridDragStartScrollTop - dragY;
+                return;
             }
-            
-            setTimeout(() => {
-                isTouchEvent = false;
-            }, 100);
+
+            if (touchPressTimer === null) return;
+
+            const distX = Math.abs(touch.clientX - touchStartX);
+            const distY = Math.abs(touch.clientY - touchStartY);
+            if (distX > TOUCH_MOVE_THRESHOLD || distY > TOUCH_MOVE_THRESHOLD) {
+                clearTouchPressTimer();
+            }
+        }
+
+        function handleGridTouchEnd(e) {
+            lastTouchTime = Date.now();
+
+            if (isGridDragging) {
+                isGridDragging = false;
+                activeTouchCellX = null;
+                activeTouchCellY = null;
+                touchLongPressTriggered = false;
+                return;
+            }
+
+            const touch = e.changedTouches[0];
+            if (touchPressTimer !== null) {
+                clearTouchPressTimer();
+
+                if (!touchLongPressTriggered && touch && activeTouchCellX !== null && activeTouchCellY !== null) {
+                    const distX = Math.abs(touch.clientX - touchStartX);
+                    const distY = Math.abs(touch.clientY - touchStartY);
+                    if (distX <= TOUCH_MOVE_THRESHOLD && distY <= TOUCH_MOVE_THRESHOLD) {
+                        revealCell(activeTouchCellX, activeTouchCellY);
+                    }
+                }
+            }
+
+            touchLongPressTriggered = false;
+            activeTouchCellX = null;
+            activeTouchCellY = null;
+        }
+
+        function handleGridTouchCancel() {
+            lastTouchTime = Date.now();
+            isGridDragging = false;
+            clearTouchPressTimer();
+            touchLongPressTriggered = false;
+            activeTouchCellX = null;
+            activeTouchCellY = null;
+        }
+
+        function shouldIgnoreMouseEvent() {
+            return Date.now() - lastTouchTime < GHOST_CLICK_DELAY || Date.now() < suppressClickUntil || isMouseDragging;
+        }
+
+        function handleGridMouseDown(e) {
+            if (e.button !== 0) return;
+
+            const coords = getCellCoordsFromTarget(e.target);
+            if (!coords) return;
+
+            if (!grid[coords.y][coords.x].isRevealed) return;
+
+            e.preventDefault();
+            startMouseGridDrag(e.clientX, e.clientY);
+        }
+
+        function handleGridMouseMove(e) {
+            if (!isMouseDragging || !gridWrapperEl) return;
+
+            const dragX = e.clientX - mouseDragStartX;
+            const dragY = e.clientY - mouseDragStartY;
+            if (!mouseDragHasMoved && (Math.abs(dragX) > MOUSE_DRAG_THRESHOLD || Math.abs(dragY) > MOUSE_DRAG_THRESHOLD)) {
+                mouseDragHasMoved = true;
+            }
+
+            gridWrapperEl.scrollLeft = mouseDragStartScrollLeft - dragX;
+            gridWrapperEl.scrollTop = mouseDragStartScrollTop - dragY;
+            e.preventDefault();
+        }
+
+        function handleGridMouseUp() {
+            stopMouseGridDrag();
         }
 
         // Sélection difficulté
@@ -648,6 +1111,16 @@
 
         function initGame() {
             clearInterval(timerInterval);
+            timerInterval = null;
+            clearTouchPressTimer();
+            isGridDragging = false;
+            stopMouseGridDrag();
+            closeEndModal();
+            touchLongPressTriggered = false;
+            activeTouchCellX = null;
+            activeTouchCellY = null;
+            lastTouchTime = 0;
+            suppressClickUntil = 0;
             timer = 0;
             timerEl.textContent = timer;
             gameOver = false;
@@ -657,8 +1130,12 @@
             firstClick = true;
             flagCountEl.textContent = flagCount;
             mineCountEl.textContent = mineCount;
-            statusEl.textContent = 'Clic gauche: révéler | Clic droit: drapeau';
+            statusEl.textContent = t('statusHint');
             statusEl.className = 'status';
+            if (gridWrapperEl) {
+                gridWrapperEl.scrollLeft = 0;
+                gridWrapperEl.scrollTop = 0;
+            }
 
             // Créer grille vide
             grid = [];
@@ -679,28 +1156,40 @@
 
         function generateMines(firstX, firstY) {
             // Créer zone de sécurité autour du premier clic
-            const safeZone = [];
+            const safeZone = new Set();
             for (let dy = -1; dy <= 1; dy++) {
                 for (let dx = -1; dx <= 1; dx++) {
                     const x = firstX + dx;
                     const y = firstY + dy;
                     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
-                        safeZone.push({x, y});
+                        safeZone.add(`${x},${y}`);
                     }
                 }
             }
 
-            // Placer les mines
-            let placed = 0;
-            while (placed < mineCount) {
-                const x = Math.floor(Math.random() * gridSize);
-                const y = Math.floor(Math.random() * gridSize);
-                const inSafeZone = safeZone.some(p => p.x === x && p.y === y);
-                
-                if (!grid[y][x].isMine && !inSafeZone) {
-                    grid[y][x].isMine = true;
-                    placed++;
+            const availableCells = [];
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    if (!safeZone.has(`${x},${y}`)) {
+                        availableCells.push({ x, y });
+                    }
                 }
+            }
+
+            const minesToPlace = Math.min(mineCount, availableCells.length);
+            if (minesToPlace !== mineCount) {
+                mineCount = minesToPlace;
+                mineCountEl.textContent = mineCount;
+            }
+
+            for (let i = availableCells.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [availableCells[i], availableCells[j]] = [availableCells[j], availableCells[i]];
+            }
+
+            for (let i = 0; i < minesToPlace; i++) {
+                const { x, y } = availableCells[i];
+                grid[y][x].isMine = true;
             }
 
             // Calculer les chiffres
@@ -730,12 +1219,14 @@
 
         function renderGrid() {
             gridEl.innerHTML = '';
-            gridEl.style.gridTemplateColumns = `repeat(${gridSize}, 35px)`;
+            gridEl.style.gridTemplateColumns = `repeat(${gridSize}, auto)`;
 
             for (let y = 0; y < gridSize; y++) {
                 for (let x = 0; x < gridSize; x++) {
                     const cell = document.createElement('button');
                     cell.className = 'cell';
+                    cell.dataset.x = String(x);
+                    cell.dataset.y = String(y);
                     const data = grid[y][x];
 
                     if (data.isRevealed) {
@@ -753,18 +1244,17 @@
                     }
 
                     cell.addEventListener('click', (e) => {
-                        if (!isTouchEvent) {
-                            revealCell(x, y);
+                        if (shouldIgnoreMouseEvent()) {
+                            e.preventDefault();
+                            return;
                         }
+                        revealCell(x, y);
                     });
                     cell.addEventListener('contextmenu', (e) => {
                         e.preventDefault();
-                        if (!isTouchEvent) {
-                            toggleFlag(x, y);
-                        }
+                        if (shouldIgnoreMouseEvent()) return;
+                        toggleFlag(x, y);
                     });
-                    cell.addEventListener('touchstart', (e) => handleCellTouchStart(e, x, y), { passive: true });
-                    cell.addEventListener('touchend', (e) => handleCellTouchEnd(e, x, y), { passive: true });
 
                     gridEl.appendChild(cell);
                 }
@@ -772,12 +1262,11 @@
         }
 
         function startTimer() {
-            if (!timerInterval) {
-                timerInterval = setInterval(() => {
-                    timer++;
-                    timerEl.textContent = timer;
-                }, 1000);
-            }
+            if (timerInterval !== null) return;
+            timerInterval = setInterval(() => {
+                timer++;
+                timerEl.textContent = timer;
+            }, 1000);
         }
 
         function revealCell(x, y) {
@@ -800,9 +1289,12 @@
                 // Game Over
                 gameOver = true;
                 clearInterval(timerInterval);
+                timerInterval = null;
                 revealAllMines();
-                statusEl.textContent = '💥 Game Over ! Vous avez touché une mine !';
+                statusEl.textContent = getLoseStatusText();
                 statusEl.className = 'status lose';
+                endModalState = { type: 'lose', time: timer };
+                openEndModal('lose', t('modalLoseTitle'), getLoseModalMessage());
                 return;
             }
 
@@ -837,12 +1329,17 @@
             flagCountEl.textContent = flagCount;
 
             renderGrid();
+            checkWin();
         }
 
         function revealAllMines() {
             for (let y = 0; y < gridSize; y++) {
                 for (let x = 0; x < gridSize; x++) {
                     if (grid[y][x].isMine) {
+                        grid[y][x].isRevealed = true;
+                    } else if (grid[y][x].isFlagged) {
+                        // Afficher les faux drapeaux comme cases normales à la fin de partie.
+                        grid[y][x].isFlagged = false;
                         grid[y][x].isRevealed = true;
                     }
                 }
@@ -851,16 +1348,64 @@
         }
 
         function checkWin() {
-            const totalCells = gridSize * gridSize;
-            const safeCells = totalCells - mineCount;
+            if (gameOver || gameWon) return;
 
-            if (revealedCount === safeCells) {
-                gameWon = true;
-                clearInterval(timerInterval);
-                statusEl.textContent = `🎉 Victoire ! Temps: ${timer}s`;
-                statusEl.className = 'status win';
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const cell = grid[y][x];
+                    if (cell.isMine && !cell.isFlagged) {
+                        return;
+                    }
+                    if (!cell.isMine && !cell.isRevealed) {
+                        return;
+                    }
+                }
             }
+
+            gameWon = true;
+            clearInterval(timerInterval);
+            timerInterval = null;
+            statusEl.textContent = getWinStatusText();
+            statusEl.className = 'status win';
+            endModalState = { type: 'win', time: timer };
+            openEndModal('win', t('modalWinTitle'), getWinModalMessage());
         }
+
+        gridEl.addEventListener('mousedown', handleGridMouseDown);
+        window.addEventListener('mousemove', handleGridMouseMove);
+        window.addEventListener('mouseup', handleGridMouseUp);
+        window.addEventListener('blur', handleGridMouseUp);
+
+        if (endModalNewGameBtn) {
+            endModalNewGameBtn.addEventListener('click', () => {
+                initGame();
+            });
+        }
+        if (endModalCloseBtn) {
+            endModalCloseBtn.addEventListener('click', () => {
+                closeEndModal();
+            });
+        }
+        if (endModalEl) {
+            endModalEl.addEventListener('click', (e) => {
+                if (e.target === endModalEl) {
+                    closeEndModal();
+                }
+            });
+        }
+
+        gridEl.addEventListener('touchstart', handleGridTouchStart, { passive: true });
+        gridEl.addEventListener('touchmove', handleGridTouchMove, { passive: false });
+        gridEl.addEventListener('touchend', handleGridTouchEnd, { passive: true });
+        gridEl.addEventListener('touchcancel', handleGridTouchCancel, { passive: true });
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === LANGUAGE_STORAGE_KEY) {
+                applyLanguage(event.newValue === 'en' ? 'en' : 'fr');
+            }
+        });
+
+        applyLanguage(getStoredLanguage());
 
         // Initialiser le jeu
         initGame();
